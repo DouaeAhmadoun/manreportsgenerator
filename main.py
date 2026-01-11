@@ -10,14 +10,6 @@ from config import Config, STREAMLIT_CONFIG
 
 st.set_page_config(**STREAMLIT_CONFIG)
 
-import os
-k_env = os.getenv("OPENAI_API_KEY", "")
-k_sec = st.secrets.get("OPENAI_API_KEY", "")
-
-st.write("ENV present:", bool(k_env), "len:", len(k_env))
-st.write("SECRETS present:", bool(k_sec), "len:", len(k_sec))
-
-
 # =============================================================================
 # CONFIGURATION DES ONGLETS
 # =============================================================================
