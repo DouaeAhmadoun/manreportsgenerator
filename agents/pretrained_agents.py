@@ -446,10 +446,13 @@ FIN DES EXEMPLES - Maintenant rédige en utilisant les données ci-dessus."""
             return None
         
         try:
+            key = self._get_api_key()
+            if os.getenv("STREAMLIT_SERVER_RUN_ON_SAVE"):
+                key = st.secrets["OPENROUTER_API_KEY"].strip()
             response = requests.post(
                 "https://openrouter.ai/api/v1/chat/completions",
                 headers={
-                    "Authorization": f"Bearer {self._get_api_key()}",
+                    "Authorization": f"Bearer {key}",
                     "Content-Type": "application/json"
                 },
                 json={
