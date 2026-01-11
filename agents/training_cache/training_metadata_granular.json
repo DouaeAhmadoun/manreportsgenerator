@@ -1,0 +1,518 @@
+{
+  "training_date": "2025-12-17T19:07:11.758975",
+  "training_type": "granular_v2",
+  "forced_retrain": true,
+  "prompts_integration": true,
+  "reports_directory": "examples",
+  "prompts_directory": "prompts",
+  "total_examples": 11,
+  "total_sections": 18,
+  "prompts_analysis": {
+    "available_prompts": {
+      "introduction": {
+        "file": "introduction.txt",
+        "path": "prompts/introduction.txt",
+        "content": "Tu es un ingénieur maritime expert en manœuvrabilité portuaire.\n\nOBJECTIF:\nRédiger l'introduction d'un rapport de manœuvrabilité (350-500 mots).\n\nCONTEXTE DU PROJET:\n- Titre: {{ metadonnees.titre | default('Étude de manœuvrabilité') }}\n- Client: {{ metadonnees.client | default('') }}\n{% if metadonnees.code_projet %}- Code projet: {{ metadonnees.code_projet }}{% endif %}\n{% if metadonnees.type_etude %}- Type d'étude: {{ metadonnees.type_etude }}{% endif %}\n{% if metadonnees.annee %}- Année: {{ metadonnees.annee }}{% endif %}\n\n{% if introduction.guidelines %}\nCONTEXTE FOURNI PAR L'UTILISATEUR:\n{{ introduction.guidelines }}\n{% endif %}\n\n{% if introduction.objectifs %}\nOBJECTIFS À INTÉGRER:\n{{ introduction.objectifs }}\n{% endif %}\n\nINFORMATIONS QUANTITATIVES (à mentionner sans détailler):\n{% if navires_liste %}- {{ navires_liste|length }} navires types étudiés{% endif %}\n{% if simulations.simulations %}- {{ simulations.simulations|length }} simulations réalisées{% endif %}\n\nSTRUCTURE À SUIVRE:\n1. Paragraphe 1 - Contexte (3-4 phrases): Client, projet, mission confiée\n2. Paragraphe 2 - Enjeux (2-3 phrases): Pourquoi cette étude est nécessaire\n3. Paragraphe 3 - Objectifs (phrase intro + liste avec •): Objectifs techniques précis\n4. Paragraphe 4 - Méthodologie (2-3 phrases): Approche simulation, analyses\n5. Phrase de transition vers les sections suivantes\n\nRÈGLES STRICTES:\n- Reste fidèle au contexte fourni par l'utilisateur s'il existe\n- Maximum 500 mots\n- Texte brut, AUCUN Markdown (pas de **, ##)\n- Utiliser \"•\" pour les listes d'objectifs (pas de \"-\" ni \"–\")\n- Ne pas détailler les valeurs techniques (vent, houle, etc.)\n- Si un contexte utilisateur est fourni, l'intégrer naturellement\n- Ton professionnel et technique\n{{ regles_formatage }}\n\nEXEMPLE DE STYLE ATTENDU:\n\"Dans le cadre du développement du terminal conteneurs TC4, Tanger Med Port Authority a confié à TME la réalisation d'une étude de manœuvrabilité. Cette étude vise à évaluer les conditions d'accès et de manœuvre des navires dans la configuration projetée des infrastructures.\n\nL'enjeu principal réside dans la validation des procédures opérationnelles pour les plus grands porte-conteneurs susceptibles de fréquenter le terminal. La sécurité des manœuvres et l'optimisation des temps d'escale constituent les priorités de cette analyse.\n\nLes objectifs de l'étude sont les suivants :\n• Évaluer la faisabilité des manœuvres d'accostage et d'appareillage\n• Définir les conditions limites d'exploitation\n• Optimiser la configuration d'assistance remorqueur\n• Identifier les contraintes opérationnelles spécifiques\n\nL'approche méthodologique repose sur des simulations numériques temps réel, conduites par des pilotes expérimentés dans des conditions environnementales représentatives. Les sections suivantes présentent les données d'entrée, les résultats des simulations et l'analyse détaillée des performances.\"\n\nRédige maintenant l'introduction:",
+        "length": 2933,
+        "variables": [
+          "metadonnees",
+          "introduction",
+          "navires_liste",
+          "simulations",
+          "regles_formatage"
+        ],
+        "has_conditions": true,
+        "has_loops": false,
+        "category": "general"
+      },
+      "analyse": {
+        "file": "analyse.txt",
+        "path": "prompts/analyse.txt",
+        "content": "Tu es un ingénieur maritime expert en analyse de simulations de manœuvrabilité.\n\nOBJECTIF:\nRédiger l'analyse principale des résultats (300-400 mots) couvrant performance, conditions critiques et facteurs de réussite/échec.\n\nDONNÉES DISPONIBLES:\n{% if simulations and simulations.simulations %}\nRÉSULTATS GLOBAUX:\n- Total: {{ simulations.simulations|length }} simulations\n- Réussites: {{ (simulations.simulations|selectattr(\"resultat\", \"equalto\", \"Réussite\")|list)|length }}\n- Échecs: {{ (simulations.simulations|selectattr(\"resultat\", \"equalto\", \"Échec\")|list)|length }}\n\n{% set echecs = simulations.simulations|selectattr(\"resultat\", \"equalto\", \"Échec\")|list %}\n{% if echecs %}\nÉCHECS IDENTIFIÉS:\n{% for echec in echecs[:5] %}\n- Essai {{ echec.numero_essai_original | default(loop.index) }}: {{ echec.condition | default('') }} - {{ echec.commentaire_pilote | default('Sans commentaire') }}\n{% endfor %}\n{% endif %}\n{% endif %}\n\n{% if analyse_synthese.conditions_critiques_liste %}\nCONDITIONS CRITIQUES RÉPERTORIÉES:\n{% for condition in analyse_synthese.conditions_critiques_liste %}\n- {{ condition }}\n{% endfor %}\n{% endif %}\n\n{% if analyse_synthese.recapitulatif_text %}\nANALYSE EXISTANTE À INTÉGRER:\n{{ analyse_synthese.recapitulatif_text }}\n{% endif %}\n\n{% if analyse_synthese.nombre_essais %}\nMÉTRIQUES (formulaire analyse) :\n- Total essais: {{ analyse_synthese.nombre_essais }}\n- Réussites: {{ analyse_synthese.nombre_reussis | default('') }}\n- Échecs: {{ analyse_synthese.nombre_echecs | default('') }}\n- Taux de réussite: {{ analyse_synthese.taux_reussite_pct | default('') }} %\n{% endif %}\n{% if analyse_synthese.nombre_scenarios_urgence %}\n- Scénarios d'urgence: {{ analyse_synthese.nombre_scenarios_urgence }}\n{% endif %}\n{% if analyse_synthese.distances_trajectoires %}\n- Distances/trajectoires: {{ analyse_synthese.distances_trajectoires }}\n{% endif %}\n{% if analyse_synthese.objectifs_evaluations %}\nÉVALUATION DES OBJECTIFS (extraits) :\n{% set objectifs = analyse_synthese.objectifs_evaluations.values()|list|sort(attribute='ordre') %}\n{% for obj in objectifs[:3] %}\n- {{ obj.objectif_texte | default('Objectif') }} : {{ obj.degre_realisation | default('Non évalué') }}{% if obj.metriques %} ({{ obj.metriques }}){% endif %}\n{% endfor %}\n{% endif %}\n\nSTRUCTURE À SUIVRE:\n1. Paragraphe 1 - Synthèse des résultats (4-5 phrases): Rappel des chiffres clés, taux de réussite, interprétation globale\n2. Paragraphe 2 - Analyse des réussites (3-4 phrases): Facteurs favorables, configurations performantes\n3. Paragraphe 3 - Analyse des échecs (3-4 phrases): Conditions critiques, causes identifiées, seuils limites\n4. Paragraphe 4 - Conclusions opérationnelles (2-3 phrases): Enseignements, recommandations implicites\n5. Phrase de transition vers les recommandations\n\nRÈGLES STRICTES:\n- Maximum 400 mots\n- Texte brut uniquement, AUCUN Markdown (pas de **, ##, *, listes)\n- Utiliser UNIQUEMENT les données fournies ci-dessus\n- Ne pas inventer de statistiques ou conditions absentes\n- Si l'analyse existante est fournie, l'enrichir sans la répéter mot pour mot\n- Prose fluide, paragraphes distincts\n- Ton analytique et factuel\n{{ regles_formatage }}\n\nEXEMPLE DE STYLE ATTENDU:\n\"L'analyse des 45 simulations révèle un taux de réussite global de 91 pour cent, traduisant une bonne maîtrise des manœuvres dans les conditions testées. La majorité des essais réussis correspondent à des conditions environnementales modérées avec un vent inférieur à 25 nœuds et une assistance de deux remorqueurs.\n\nLes configurations les plus performantes associent une approche par le sud-ouest avec un courant de flot favorable. Dans ces conditions, les temps de manœuvre restent conformes aux standards opérationnels et les marges de sécurité sont respectées.\n\nLes quatre échecs observés présentent un dénominateur commun : la combinaison d'un vent de secteur nord supérieur à 30 nœuds avec une houle croisée. Ces conditions génèrent des efforts latéraux dépassant la capacité de compensation des remorqueurs, rendant le contrôle du navire insuffisant à l'approche du poste.\n\nCes résultats confirment la faisabilité des manœuvres dans l'enveloppe opérationnelle nominale tout en identifiant des seuils critiques à respecter. Les recommandations détaillées sont présentées dans la section suivante.\"\n\nRédige maintenant l'analyse:",
+        "length": 4316,
+        "variables": [
+          "simulations",
+          "(simulations",
+          "echec",
+          "condition",
+          "analyse_synthese",
+          "obj",
+          "regles_formatage"
+        ],
+        "has_conditions": true,
+        "has_loops": true,
+        "category": "analyse"
+      },
+      "conclusion": {
+        "file": "conclusion.txt",
+        "path": "prompts/conclusion.txt",
+        "content": "Tu es un ingénieur maritime expert en manœuvrabilité portuaire.\n\nOBJECTIF:\nRédiger la conclusion d'un rapport de manœuvrabilité (250-350 mots).\n\nDONNÉES DISPONIBLES:\n{% if simulations and simulations.simulations %}\n- Total simulations: {{ simulations.simulations|length }}\n- Réussites: {{ (simulations.simulations|selectattr(\"resultat\", \"equalto\", \"Réussite\")|list)|length }}\n- Échecs: {{ (simulations.simulations|selectattr(\"resultat\", \"equalto\", \"Échec\")|list)|length }}\n- Taux de réussite: {{ ((simulations.simulations|selectattr(\"resultat\", \"equalto\", \"Réussite\")|list)|length / simulations.simulations|length * 100)|round(1) }}%\n{% endif %}\n\n{% if analyse_synthese.commentaire %}\nANALYSE EXISTANTE:\n{{ analyse_synthese.commentaire }}\n{% endif %}\n\n{% if conclusion %}\nÉLÉMENTS DE CONCLUSION FOURNIS:\n{{ conclusion }}\n{% endif %}\n\nSTRUCTURE À SUIVRE:\n1. Paragraphe 1 - Synthèse des résultats (4-5 phrases): Rappel du contexte, résultats globaux, taux de réussite\n2. Paragraphe 2 - Réponse aux objectifs (3-4 phrases): Ce que l'étude a démontré\n3. Paragraphe 3 - Recommandations opérationnelles: Liste avec \"•\" (4-6 items)\n4. Paragraphe 4 - Limitations et perspectives (2-3 phrases): Limites de l'étude, études complémentaires suggérées\n\nRÈGLES STRICTES:\n- Maximum 350 mots\n- Texte brut, AUCUN Markdown (pas de **, ##)\n- Utiliser \"•\" pour la liste de recommandations\n- Utiliser UNIQUEMENT les données fournies\n- Ne pas inventer de statistiques absentes\n- Ton conclusif et professionnel\n{{ regles_formatage }}\n\nEXEMPLE DE STYLE ATTENDU:\n\"L'étude de manœuvrabilité réalisée pour le terminal TC4 a permis d'évaluer de manière exhaustive les conditions d'accès et de manœuvre des navires. Sur les 45 simulations conduites, 41 se sont conclues par une réussite, soit un taux de réussite global de 91 pour cent. Ces résultats confirment la faisabilité des opérations dans l'enveloppe opérationnelle définie.\n\nLes objectifs initiaux de l'étude ont été atteints. La faisabilité des manœuvres d'accostage et d'appareillage est validée pour l'ensemble des navires types dans les conditions environnementales nominales. Les seuils critiques d'exploitation ont été identifiés et quantifiés.\n\nSur la base de ces résultats, les recommandations suivantes sont formulées :\n• Limiter les opérations lorsque le vent dépasse 30 nœuds de secteur nord\n• Prévoir systématiquement deux remorqueurs pour les navires de plus de 350 mètres\n• Privilégier les créneaux de pleine mer pour les plus grands gabarits\n• Renforcer la coordination VHF en conditions dégradées\n• Mettre à jour les procédures d'exploitation en conséquence\n\nCette étude présente certaines limitations inhérentes à l'approche par simulation. Des essais en conditions réelles lors de la mise en service permettront de valider les conclusions et d'affiner les seuils opérationnels.\"\n\nRédige maintenant la conclusion:",
+        "length": 2860,
+        "variables": [
+          "simulations",
+          "(simulations",
+          "((simulations",
+          "analyse_synthese",
+          "conclusion",
+          "regles_formatage"
+        ],
+        "has_conditions": true,
+        "has_loops": false,
+        "category": "general"
+      },
+      "donnees_entree_intro": {
+        "file": "donnees_entree_intro.txt",
+        "path": "prompts/donnees_entree_intro.txt",
+        "content": "Tu es un ingénieur maritime spécialisé en études de manœuvrabilité portuaire.\n\nCONTEXTE:\nTu rédiges l'introduction de la section \"Données d'entrée\" pour une étude de manœuvrabilité.\nTitre de l'étude: {{ metadonnees.titre | default(\"Étude de manœuvrabilité\") }}\nClient: {{ metadonnees.client | default(\"\") }}\n\nOBJECTIF:\nRédiger une introduction COURTE (60-80 mots maximum) qui:\n1. Rappelle que la fiabilité de l'étude repose sur des données d'entrée solides\n2. Annonce les catégories de données disponibles dans cette étude\n3. Termine en indiquant que les sections suivantes détaillent chaque jeu de données\n\nCATÉGORIES DE DONNÉES DISPONIBLES POUR CETTE ÉTUDE:\n{% if donnees_entree.plan_de_masse.phases or donnees_entree.plan_de_masse.figures %}- Plan de masse{% endif %}\n{% if donnees_entree.balisage.figures %}- Balisage{% endif %}\n{% if donnees_entree.bathymetrie.source or donnees_entree.bathymetrie.figures %}- Bathymétrie{% endif %}\n{% if donnees_entree.conditions_environnementales.vent.conditions or  donnees_entree.conditions_environnementales.vent.valeurs_retenues %}- Vent{% endif %}\n{% if donnees_entree.conditions_environnementales.houle.conditions or donnees_entree.conditions_environnementales.houle.valeurs_retenues %}- Houle{% endif %}\n{% if donnees_entree.conditions_environnementales.courant.conditions or donnees_entree.conditions_environnementales.courant.valeurs_retenues %}- Courant{% endif %}\n{% if donnees_entree.conditions_environnementales.maree.conditions or donnees_entree.conditions_environnementales.maree.valeurs_retenues %}- Marée{% endif %}\n{% if donnees_entree.conditions_environnementales.agitation.conditions or donnees_entree.conditions_environnementales.agitation.valeurs_retenues %}- Agitation{% endif %}\n\nRÈGLES STRICTES:\n- Maximum 120 mots\n- UNIQUEMENT du texte brut, AUCUN formatage Markdown (pas de **, ##, *, etc.)\n- NE PAS inventer de données (pas de chiffres, pas de valeurs)\n- NE PAS faire de listes à puces dans le texte\n- Rédiger en prose fluide, style rapport technique\n- Maximum 80 mots\n- Ton professionnel et synthétique\n- Si une catégorie n'est pas listée ci-dessus, NE PAS la mentionner\n{{ regles_formatage }}\n\nEXEMPLE DE RÉSULTAT ATTENDU:\n\"La fiabilité d'une étude de manœuvrabilité repose sur la qualité des données d'entrée. Pour cette étude, les données collectées couvrent les conditions environnementales (vent, houle, courant, marée), la bathymétrie du site, le balisage maritime ainsi que les plans de masse des infrastructures portuaires. Les sections suivantes présentent en détail chaque jeu de données utilisé pour les simulations.\"\n\nRédige maintenant l'introduction:",
+        "length": 2633,
+        "variables": [
+          "metadonnees",
+          "regles_formatage"
+        ],
+        "has_conditions": true,
+        "has_loops": false,
+        "category": "donnees_entree"
+      },
+      "donnees_entree_plan_masse": {
+        "file": "donnees_entree_plan_masse.txt",
+        "path": "prompts/donnees_entree_plan_masse.txt",
+        "content": "Tu es un ingénieur maritime spécialisé en aménagements portuaires.\n\nOBJECTIF:\nRédiger la sous-section \"Plan de masse\" des données d'entrée (150-300 mots).\n\nDONNÉES DISPONIBLES:\n{% if donnees_entree.plan_de_masse.phases %}\nPHASES DU PROJET:\n{% for phase in donnees_entree.plan_de_masse.phases %}\n- {{ phase.nom | default('Phase') }}: {{ phase.description | default('') }}\n{% endfor %}\n{% endif %}\n\n{% if donnees_entree.plan_de_masse.commentaire %}\nCOMMENTAIRE:\n{{ donnees_entree.plan_de_masse.commentaire }}\n{% endif %}\n\n{% if donnees_entree.plan_de_masse.figures %}\nFIGURES: {{ donnees_entree.plan_de_masse.figures|length }} planche(s) disponible(s)\n{% endif %}\n\nCONTENU À PRODUIRE:\n1. Présenter les infrastructures portuaires concernées par l'étude\n2. Décrire les phases si plusieurs configurations sont étudiées\n3. Mentionner les éléments clés pour la manœuvre (postes, bassins, chenaux)\n4. Référencer les figures si disponibles\n5. Terminer par une phrase de transition\n\nRÈGLES STRICTES:\n- Maximum 300 mots\n- Texte brut, AUCUN Markdown\n- Utiliser UNIQUEMENT les données fournies\n- Si aucune donnée n'est disponible, rédiger une description générique courte\n- Prose fluide, pas de listes\n{{ regles_formatage }}\n\nEXEMPLE DE STYLE ATTENDU:\n\"Le plan de masse de l'étude couvre la configuration du terminal conteneurs TC4 dans sa phase d'extension. Les infrastructures comprennent deux postes d'accostage de 400 mètres linéaires chacun, un bassin d'évitage de 600 mètres de diamètre et le chenal d'accès de 250 mètres de largeur.\n\nLa configuration étudiée correspond à la phase 2 du projet, intégrant l'ensemble des ouvrages de protection et les aménagements de quai définitifs. Les plans détaillés sont présentés en annexe.\"\n\nRédige maintenant la section plan de masse:",
+        "length": 1767,
+        "variables": [
+          "phase",
+          "donnees_entree",
+          "regles_formatage"
+        ],
+        "has_conditions": true,
+        "has_loops": true,
+        "category": "donnees_entree"
+      },
+      "donnees_entree_bathymetrie": {
+        "file": "donnees_entree_bathymetrie.txt",
+        "path": "prompts/donnees_entree_bathymetrie.txt",
+        "content": "Tu es un ingénieur maritime spécialisé en hydrographie.\n\nOBJECTIF:\nRédiger la sous-section \"Bathymétrie\" des données d'entrée (150-300 mots).\n\nDONNÉES DISPONIBLES:\n{% if donnees_entree.bathymetrie.source %}\nSOURCE: {{ donnees_entree.bathymetrie.source }}\n{% endif %}\n{% if donnees_entree.bathymetrie.date %}\nDATE DES RELEVÉS: {{ donnees_entree.bathymetrie.date }}\n{% endif %}\n{% if donnees_entree.bathymetrie.notes_profondeur %}\nNOTES SUR LES PROFONDEURS: {{ donnees_entree.bathymetrie.notes_profondeur }}\n{% endif %}\n{% if donnees_entree.bathymetrie.commentaire %}\nCOMMENTAIRE À INTÉGRER:\n{{ donnees_entree.bathymetrie.commentaire }}\n{% endif %}\n\nCONTENU À PRODUIRE:\n1. Présenter la source des données bathymétriques et leur fiabilité\n2. Mentionner la date des relevés si pertinente\n3. Décrire les caractéristiques bathymétriques importantes (profondeurs, nature du fond)\n4. Expliquer l'impact sur les conditions de manœuvre (tirant d'eau, pied de pilote)\n5. Phrase de transition\n\nRÈGLES STRICTES:\n- Maximum 300 mots\n- Texte brut, AUCUN Markdown\n- Utiliser UNIQUEMENT les données fournies\n- Si un commentaire est fourni, l'intégrer naturellement\n- Prose fluide, paragraphes continus\n- Ton technique et professionnel\n{{ regles_formatage }}\n\nEXEMPLE DE STYLE ATTENDU:\n\"Les données bathymétriques utilisées pour cette étude proviennent des relevés hydrographiques réalisés par le Service Hydrographique en mars 2024. Ces données récentes garantissent une représentation fidèle des fonds marins dans la zone d'étude.\n\nLes profondeurs dans le chenal d'accès varient de 16 à 18 mètres, permettant l'accueil de navires avec un tirant d'eau maximal de 14,5 mètres en tenant compte du pied de pilote réglementaire. Le bassin d'évitage présente des profondeurs homogènes de 17 mètres. La nature du fond, essentiellement sablo-vaseuse, ne présente pas d'obstacle particulier pour les manœuvres.\n\nCes caractéristiques bathymétriques ont été intégrées dans le modèle de simulation pour garantir la représentativité des essais.\"\n\nRédige maintenant la section bathymétrie:",
+        "length": 2058,
+        "variables": [
+          "donnees_entree",
+          "regles_formatage"
+        ],
+        "has_conditions": true,
+        "has_loops": false,
+        "category": "donnees_entree"
+      },
+      "donnees_entree_balisage": {
+        "file": "donnees_entree_balisage.txt",
+        "path": "prompts/donnees_entree_balisage.txt",
+        "content": "Tu es un ingénieur maritime spécialisé en signalisation maritime.\n\nOBJECTIF:\nRédiger la sous-section \"Balisage\" des données d'entrée (150-300 mots).\n\nDONNÉES DISPONIBLES:\n{% if donnees_entree.balisage.commentaire %}\nCOMMENTAIRE:\n{{ donnees_entree.balisage.commentaire }}\n{% endif %}\n\n{% if donnees_entree.balisage.figures %}\nFIGURES: {{ donnees_entree.balisage.figures|length }} planche(s) disponible(s)\n{% endif %}\n\nCONTENU À PRODUIRE:\n1. Expliquer brièvement l'importance du balisage pour la sécurité de la navigation\n2. Décrire les éléments de balisage pertinents pour l'étude (si mentionnés)\n3. Référencer les figures si disponibles\n4. Expliquer l'impact sur les procédures de manœuvre\n\nRÈGLES STRICTES:\n- Maximum 300 mots\n- Texte brut, AUCUN Markdown\n- Utiliser UNIQUEMENT les données fournies\n- Prose fluide, 3-5 phrases\n- Ton technique et professionnel\n{{ regles_formatage }}\n\nEXEMPLE DE STYLE ATTENDU:\n\"Le balisage maritime constitue un élément essentiel pour la sécurité des manœuvres d'approche et d'accostage. Le système de signalisation du site comprend les marques latérales conformes au système AISM région A, complétées par des feux de secteur pour le guidage dans le chenal. Les bouées cardinales délimitent les zones de hauts-fonds à éviter lors des manœuvres. Le plan de balisage détaillé est présenté dans les figures en annexe.\"\n\nRédige maintenant la section balisage:",
+        "length": 1388,
+        "variables": [
+          "donnees_entree",
+          "regles_formatage"
+        ],
+        "has_conditions": true,
+        "has_loops": false,
+        "category": "donnees_entree"
+      },
+      "donnees_entree_conditions_intro": {
+        "file": "donnees_entree_conditions_intro.txt",
+        "path": "prompts/donnees_entree_conditions_intro.txt",
+        "content": "Tu es un ingénieur maritime spécialisé en études de manœuvrabilité portuaire.\n\nOBJECTIF:\nRédiger l'introduction de la section \"Conditions environnementales\" (100-150 mots maximum).\n\nCONTENU À PRODUIRE:\n1. Expliquer brièvement pourquoi les conditions environnementales sont cruciales pour la manœuvrabilité\n2. Mentionner les paramètres disponibles pour cette étude (uniquement ceux listés ci-dessous)\n3. Terminer par une phrase de transition vers les sous-sections\n\nPARAMÈTRES DISPONIBLES POUR CETTE ÉTUDE:\n{% if donnees_entree.conditions_environnementales.houle.valeurs_retenues %}- Houle{% endif %}\n{% if donnees_entree.conditions_environnementales.vent.valeurs_retenues %}- Vent{% endif %}\n{% if donnees_entree.conditions_environnementales.courant.valeurs_retenues %}- Courant{% endif %}\n{% if donnees_entree.conditions_environnementales.maree.valeurs_retenues %}- Marée{% endif %}\n{% if donnees_entree.conditions_environnementales.agitation.valeurs_retenues %}- Agitation{% endif %}\n\nRÈGLES STRICTES:\n- Maximum 150 mots\n- Texte brut uniquement, AUCUN Markdown (pas de **, ##, *, listes numérotées)\n- Rédiger en prose fluide, pas de listes à puces\n- Ne pas inventer de données ou valeurs chiffrées\n- Si un paramètre n'est pas listé ci-dessus, ne pas le mentionner\n- Ton professionnel et synthétique\n{{ regles_formatage }}\n\nEXEMPLE DE RÉSULTAT ATTENDU:\n\"Les conditions environnementales constituent un facteur déterminant pour la sécurité et la faisabilité des manœuvres portuaires. Le vent, la houle, le courant et la marée influencent directement le comportement du navire et les besoins en assistance remorqueur. Pour cette étude, les paramètres retenus couvrent l'ensemble des conditions susceptibles d'affecter les opérations. Les sous-sections suivantes détaillent chaque paramètre environnemental et les valeurs retenues pour les simulations.\"\n\nRédige maintenant l'introduction:",
+        "length": 1886,
+        "variables": [
+          "regles_formatage"
+        ],
+        "has_conditions": true,
+        "has_loops": false,
+        "category": "donnees_entree"
+      },
+      "donnees_entree_houle": {
+        "file": "donnees_entree_houle.txt",
+        "path": "prompts/donnees_entree_houle.txt",
+        "content": "Tu es un ingénieur maritime spécialisé en océanographie.\n\nOBJECTIF:\nRédiger la sous-section \"Houle\" des conditions environnementales (150-1300 mots).\n\nDONNÉES DISPONIBLES:\n{% if donnees_entree.conditions_environnementales.houle.conditions %}\nCONDITIONS TESTÉES: {{ donnees_entree.conditions_environnementales.houle.conditions|join(', ') }}\n{% endif %}\n{% if donnees_entree.conditions_environnementales.houle.valeurs_retenues %}\nVALEURS RETENUES: {{ donnees_entree.conditions_environnementales.houle.valeurs_retenues }}\n{% endif %}\n{% if donnees_entree.conditions_environnementales.houle.source %}\nSOURCE: {{ donnees_entree.conditions_environnementales.houle.source }}\n{% endif %}\n{% if donnees_entree.conditions_environnementales.houle.commentaire %}\nCOMMENTAIRE: {{ donnees_entree.conditions_environnementales.houle.commentaire }}\n{% endif %}\n\nCONTENU À PRODUIRE:\n1. Présenter les conditions de houle considérées dans l'étude\n2. Mentionner les valeurs retenues (hauteur, période, direction)\n3. Expliquer brièvement l'impact de la houle sur les manœuvres\n4. Référencer les figures si mentionnées\n\nRÈGLES STRICTES:\n- Maximum 300 mots\n- Texte brut, AUCUN Markdown\n- Utiliser UNIQUEMENT les données fournies\n- 3-5 phrases fluides\n- Ne pas inventer de valeurs absentes\n{{ regles_formatage }}\n\nEXEMPLE DE STYLE ATTENDU:\n\"Les conditions de houle retenues pour l'étude correspondent aux états de mer représentatifs du site. Les hauteurs significatives testées varient de 0,5 à 2 mètres avec des périodes de 8 à 12 secondes, couvrant les conditions opérationnelles jusqu'aux seuils limites. La houle influence principalement le comportement du navire en roulis et peut compliquer les opérations d'amarrage. Les directions de houle les plus contraignantes, correspondant à une incidence défavorable par rapport à l'orientation des postes, ont été spécifiquement évaluées.\"\n\nRédige maintenant la section houle:",
+        "length": 1900,
+        "variables": [
+          "donnees_entree",
+          "regles_formatage"
+        ],
+        "has_conditions": true,
+        "has_loops": false,
+        "category": "donnees_entree"
+      },
+      "donnees_entree_vent": {
+        "file": "donnees_entree_vent.txt",
+        "path": "prompts/donnees_entree_vent.txt",
+        "content": "Tu es un ingénieur maritime spécialisé en météorologie portuaire.\n\nOBJECTIF:\nRédiger la sous-section \"Vent\" des conditions environnementales (150-300 mots).\n\nDONNÉES DISPONIBLES:\n{% if donnees_entree.conditions_environnementales.vent.conditions %}\nCONDITIONS TESTÉES: {{ donnees_entree.conditions_environnementales.vent.conditions|join(', ') }}\n{% endif %}\n{% if donnees_entree.conditions_environnementales.vent.valeurs_retenues %}\nVALEURS RETENUES: {{ donnees_entree.conditions_environnementales.vent.valeurs_retenues }}\n{% endif %}\n{% if donnees_entree.conditions_environnementales.vent.source %}\nSOURCE: {{ donnees_entree.conditions_environnementales.vent.source }}\n{% endif %}\n{% if donnees_entree.conditions_environnementales.vent.commentaire %}\nCOMMENTAIRE: {{ donnees_entree.conditions_environnementales.vent.commentaire }}\n{% endif %}\n\nCONTENU À PRODUIRE:\n1. Présenter les conditions de vent considérées dans l'étude\n2. Mentionner les valeurs retenues pour les simulations\n3. Expliquer brièvement l'impact du vent sur les manœuvres portuaires\n4. Référencer les figures/données graphiques si mentionnées\n\nRÈGLES STRICTES:\n- Maximum 300 mots\n- Texte brut, AUCUN Markdown\n- Utiliser UNIQUEMENT les données fournies\n- 3-5 phrases fluides\n- Ne pas inventer de valeurs absentes\n{{ regles_formatage }}\n\nEXEMPLE DE STYLE ATTENDU:\n\"Les conditions de vent retenues pour les simulations couvrent les secteurs les plus contraignants pour les manœuvres, notamment le secteur nord-ouest prédominant sur le site. Les vitesses testées s'échelonnent de 15 à 35 nœuds, correspondant aux conditions opérationnelles courantes jusqu'aux seuils critiques d'exploitation. Le vent constitue le facteur environnemental le plus influent sur le comportement du navire à faible vitesse, générant des efforts latéraux significatifs lors des phases d'approche et d'accostage.\"\n\nRédige maintenant la section vent:",
+        "length": 1890,
+        "variables": [
+          "donnees_entree",
+          "regles_formatage"
+        ],
+        "has_conditions": true,
+        "has_loops": false,
+        "category": "donnees_entree"
+      },
+      "donnees_entree_courant": {
+        "file": "donnees_entree_courant.txt",
+        "path": "prompts/donnees_entree_courant.txt",
+        "content": "Tu es un ingénieur maritime spécialisé en hydrodynamique portuaire.\n\nOBJECTIF:\nRédiger la sous-section \"Courant\" des conditions environnementales (150-1300 mots).\n\nDONNÉES DISPONIBLES:\n{% if donnees_entree.conditions_environnementales.courant.conditions %}\nCONDITIONS TESTÉES: {{ donnees_entree.conditions_environnementales.courant.conditions|join(', ') }}\n{% endif %}\n{% if donnees_entree.conditions_environnementales.courant.valeurs_retenues %}\nVALEURS RETENUES: {{ donnees_entree.conditions_environnementales.courant.valeurs_retenues }}\n{% endif %}\n{% if donnees_entree.conditions_environnementales.courant.source %}\nSOURCE: {{ donnees_entree.conditions_environnementales.courant.source }}\n{% endif %}\n{% if donnees_entree.conditions_environnementales.courant.commentaire %}\nCOMMENTAIRE: {{ donnees_entree.conditions_environnementales.courant.commentaire }}\n{% endif %}\n\nCONTENU À PRODUIRE:\n1. Présenter les conditions de courant considérées dans l'étude\n2. Mentionner les valeurs retenues (vitesse, direction)\n3. Expliquer brièvement l'impact du courant sur les manœuvres\n4. Distinguer flot et jusant si pertinent\n\nRÈGLES STRICTES:\n- Maximum 300 mots\n- Texte brut, AUCUN Markdown\n- Utiliser UNIQUEMENT les données fournies\n- 3-5 phrases fluides\n- Ne pas inventer de valeurs absentes\n{{ regles_formatage }}\n\nEXEMPLE DE STYLE ATTENDU:\n\"Les courants de marée constituent un paramètre déterminant pour les manœuvres dans la zone portuaire. Les vitesses retenues pour les simulations atteignent 2 nœuds en vive-eau, représentatives des conditions les plus contraignantes. Le courant de flot, orienté vers le nord-est, et le courant de jusant, orienté vers le sud-ouest, ont été modélisés pour les différentes phases de marée. L'influence du courant est particulièrement sensible lors des manœuvres d'évitage et de positionnement final au poste.\"\n\nRédige maintenant la section courant:",
+        "length": 1883,
+        "variables": [
+          "donnees_entree",
+          "regles_formatage"
+        ],
+        "has_conditions": true,
+        "has_loops": false,
+        "category": "donnees_entree"
+      },
+      "donnees_entree_maree": {
+        "file": "donnees_entree_maree.txt",
+        "path": "prompts/donnees_entree_maree.txt",
+        "content": "Tu es un ingénieur maritime spécialisé en marégraphie.\n\nOBJECTIF:\nRédiger la sous-section \"Marée\" des conditions environnementales (150-300 mots).\n\nDONNÉES DISPONIBLES:\n{% if donnees_entree.conditions_environnementales.maree.conditions %}\nCONDITIONS TESTÉES: {{ donnees_entree.conditions_environnementales.maree.conditions|join(', ') }}\n{% endif %}\n{% if donnees_entree.conditions_environnementales.maree.valeurs_retenues %}\nVALEURS RETENUES: {{ donnees_entree.conditions_environnementales.maree.valeurs_retenues }}\n{% endif %}\n{% if donnees_entree.conditions_environnementales.maree.source %}\nSOURCE: {{ donnees_entree.conditions_environnementales.maree.source }}\n{% endif %}\n{% if donnees_entree.conditions_environnementales.maree.commentaire %}\nCOMMENTAIRE: {{ donnees_entree.conditions_environnementales.maree.commentaire }}\n{% endif %}\n\nCONTENU À PRODUIRE:\n1. Présenter les conditions de marée considérées dans l'étude\n2. Mentionner les niveaux d'eau retenus (PM, BM, coefficients)\n3. Expliquer brièvement l'impact de la marée sur les manœuvres (tirant d'eau disponible)\n4. Distinguer vive-eau et morte-eau si pertinent\n\nRÈGLES STRICTES:\n- Maximum 300 mots\n- Texte brut, AUCUN Markdown\n- Utiliser UNIQUEMENT les données fournies\n- 3-5 phrases fluides\n- Ne pas inventer de valeurs absentes\n{{ regles_formatage }}\n\nEXEMPLE DE STYLE ATTENDU:\n\"Les conditions de marée retenues pour les simulations couvrent les situations de vive-eau et de morte-eau représentatives du régime tidal du site. Les niveaux d'eau testés varient de la basse mer de vive-eau à la pleine mer, permettant d'évaluer l'influence du tirant d'eau disponible sur les manœuvres. Le marnage, atteignant 3,5 mètres en vive-eau, conditionne les créneaux d'accès pour les navires à fort tirant d'eau. Les simulations ont particulièrement ciblé les conditions de basse mer pour identifier les éventuelles restrictions opérationnelles.\"\n\nRédige maintenant la section marée:",
+        "length": 1937,
+        "variables": [
+          "donnees_entree",
+          "regles_formatage"
+        ],
+        "has_conditions": true,
+        "has_loops": false,
+        "category": "donnees_entree"
+      },
+      "donnees_entree_agitation": {
+        "file": "donnees_entree_agitation.txt",
+        "path": "prompts/donnees_entree_agitation.txt",
+        "content": "Tu es un ingénieur maritime spécialisé en agitation portuaire.\n\nOBJECTIF:\nRédiger la sous-section \"Agitation\" des conditions environnementales (150-300 mots).\n\nDONNÉES DISPONIBLES:\n{% if donnees_entree.conditions_environnementales.agitation.conditions %}\nCONDITIONS TESTÉES: {{ donnees_entree.conditions_environnementales.agitation.conditions|join(', ') }}\n{% endif %}\n{% if donnees_entree.conditions_environnementales.agitation.valeurs_retenues %}\nVALEURS RETENUES: {{ donnees_entree.conditions_environnementales.agitation.valeurs_retenues }}\n{% endif %}\n{% if donnees_entree.conditions_environnementales.agitation.commentaire %}\nCOMMENTAIRE: {{ donnees_entree.conditions_environnementales.agitation.commentaire }}\n{% endif %}\n\nCONTENU À PRODUIRE:\n1. Présenter les conditions d'agitation résiduelle considérées\n2. Mentionner les valeurs retenues (hauteur dans le bassin)\n3. Expliquer brièvement l'impact sur les opérations portuaires\n4. Distinguer agitation au poste et en manœuvre si pertinent\n\nRÈGLES STRICTES:\n- Maximum 300 mots\n- Texte brut, AUCUN Markdown\n- Utiliser UNIQUEMENT les données fournies\n- 3-5 phrases fluides\n- Ne pas inventer de valeurs absentes\n{{ regles_formatage }}\n\nEXEMPLE DE STYLE ATTENDU:\n\"L'agitation résiduelle dans les bassins portuaires a été prise en compte pour l'évaluation des conditions de manœuvre et de stationnement. Les niveaux d'agitation retenus correspondent aux valeurs issues des études de propagation de houle, avec des hauteurs significatives de 0,3 à 0,5 mètre selon les postes. Cette agitation résiduelle influence principalement les opérations d'amarrage et le comportement du navire à quai. Les seuils d'exploitation définis garantissent des conditions acceptables pour les opérations de manutention.\"\n\nRédige maintenant la section agitation:",
+        "length": 1792,
+        "variables": [
+          "donnees_entree",
+          "regles_formatage"
+        ],
+        "has_conditions": true,
+        "has_loops": false,
+        "category": "donnees_entree"
+      },
+      "donnees_entree_synthese": {
+        "file": "donnees_entree_synthese.txt",
+        "path": "prompts/donnees_entree_synthese.txt",
+        "content": "Tu es un ingénieur maritime expert en manœuvrabilité portuaire.\n\nOBJECTIF:\nRédiger une synthèse des données d'entrée (150-300 mots maximum) qui regroupe et met en cohérence toutes les informations collectées.\n\nDONNÉES DISPONIBLES:\nDonnées structurées :\nPlan de masse : {{ donnees_entree.plan_de_masse | default('') }}\nBalisage : {{ donnees_entree.balisage | default('') }}\nBathymétrie : {{ donnees_entree.bathymetrie | default('') }}\nHoule : {{ donnees_entree.conditions_environnementales.houle | default('') }}\nVent : {{ donnees_entree.conditions_environnementales.vent | default('') }}\nCourant : {{ donnees_entree.conditions_environnementales.courant | default('') }}\nMarée : {{ donnees_entree.conditions_environnementales.maree | default('') }}\nAgitation : {{ donnees_entree.conditions_environnementales.agitation | default('') }}\n\nSTRUCTURE À SUIVRE:\n1. Paragraphe 1 (3-4 phrases): Résumer les données d'infrastructure (plan de masse, balisage, bathymétrie)\n2. Paragraphe 2 (3-4 phrases): Résumer les conditions environnementales avec les valeurs clés\n3. Paragraphe 3 (2-3 phrases): Conclure sur la cohérence d'ensemble et les interactions importantes\n4. Phrase finale: Transition vers les navires\n\nRÈGLES STRICTES:\n- Maximum 300 mots\n- Texte brut uniquement, AUCUN Markdown (pas de **, ##, *, listes)\n- Utiliser UNIQUEMENT les données listées ci-dessus\n- Ne pas inventer de valeurs absentes\n- Ne pas répéter deux fois la même information\n- Prose fluide, style rapport technique\n- Chaque valeur mentionnée une seule fois\n{{ regles_formatage }}\n\nEXEMPLE DE STYLE ATTENDU:\n\"Les données d'infrastructure comprennent un plan de masse détaillant les postes d'accostage et les zones de manœuvre, complété par un système de balisage conforme aux normes AISM. La bathymétrie, issue de relevés récents, garantit des profondeurs compatibles avec les tirants d'eau des navires étudiés.\nLes conditions environnementales retenues couvrent des vents de secteur Nord-Ouest jusqu'à 25 nœuds, une houle de 1,5 mètre et des courants de marée atteignant 2 nœuds en vive-eau.\nL'ensemble de ces données présente une cohérence satisfaisante pour l'évaluation des manœuvres. Les sections suivantes détaillent les simulations réalisées.\"\n\nRédige maintenant la synthèse:",
+        "length": 2249,
+        "variables": [
+          "donnees_entree",
+          "regles_formatage"
+        ],
+        "has_conditions": false,
+        "has_loops": false,
+        "category": "donnees_entree"
+      },
+      "navires": {
+        "file": "navires.txt",
+        "path": "prompts/navires.txt",
+        "content": "Tu es un capitaine de port concis. Résume en 5-10 phrases les navires : flotte, caractéristiques, et principe d’emploi.\n\nOBJECTIF:\nRédiger une description concise des navires étudiés.\n\nDONNÉES DISPONIBLES:\n{% if navires_liste %}\nListe (extraits) :\n{% for navire in navires_liste[:5] %}\n- {{ navire.nom | default('Navire') }} ({{ navire.type | default('Type') }}){% if navire.longueur %}, {{ navire.longueur }} m{% endif %}{% if navire.largeur %}, {{ navire.largeur }} m{% endif %}{% if navire.tirant_eau_av %}, TE av {{ navire.tirant_eau_av }} m{% endif %}{% if navire.tirant_eau_ar %}, TE ar {{ navire.tirant_eau_ar }} m{% endif %}{% if navire.deplacement %}, déplacement {{ navire.deplacement }} t{% endif %}{% if navire.propulsion %}, prop {{ navire.propulsion }}{% endif %}{% if navire.puissance_machine %}, puissance {{ navire.puissance_machine }}{% endif %}\n{% endfor %}\n{% endif %}\n{% if donnees_navires.navires.commentaire %}\nCommentaire utilisateur :\n{{ donnees_navires.navires.commentaire }}\n{% endif %}\n\nCONTENU À PRODUIRE:\n1. Présenter les types de navires retenus pour l'étude\n2. Mentionner 2-3 caractéristiques clés (dimensions, tirant d'eau)\n3. Expliquer brièvement la logique de sélection (représentativité du trafic)\n4. Identifier le cas dimensionnant si pertinent\n\nRÈGLES STRICTES:\n- Texte brut, AUCUN Markdown\n- Utiliser UNIQUEMENT les données fournies\n- Prose fluide, 5-10 phrases\n- Ne pas lister exhaustivement tous les navires (synthèse globale)\n{{ regles_formatage }}\n\nEXEMPLE DE STYLE ATTENDU:\n\"La flotte de navires types retenue pour l'étude comprend trois catégories représentatives du trafic attendu. Le navire dimensionnant est un porte-conteneurs de 366 mètres de longueur et 14,5 mètres de tirant d'eau, correspondant aux plus grandes unités susceptibles de fréquenter le terminal. Des navires de gabarit intermédiaire complètent le panel pour couvrir la diversité des escales. Cette sélection permet d'évaluer les conditions de manœuvre pour l'ensemble des configurations opérationnelles.\"\n\nRédige maintenant la description des navires:",
+        "length": 2067,
+        "variables": [
+          "navire",
+          "donnees_navires",
+          "regles_formatage"
+        ],
+        "has_conditions": true,
+        "has_loops": true,
+        "category": "navires"
+      },
+      "remorqueurs": {
+        "file": "remorqueurs.txt",
+        "path": "prompts/remorqueurs.txt",
+        "content": "Tu es un capitaine de port concis. Résume en 5-10 phrases les moyens d’assistance : flotte, traction indicative, et principe d’emploi.\n\nOBJECTIF:\nRédiger une description concise de la flotte utilisée.\n\nDONNÉES DISPONIBLES:\n{% if remorqueurs_liste %}\nFlotte (extraits) :\n{% for remorqueur in remorqueurs_liste[:4] %}\n- {{ remorqueur.nom | default('Remorqueur') }} ({{ remorqueur.type | default('Type') }}){% if remorqueur.traction %}, traction {{ remorqueur.traction }} t{% endif %}{% if remorqueur.longueur %}, {{ remorqueur.longueur }} m{% endif %}{% if remorqueur.largeur %}, {{ remorqueur.largeur }} m{% endif %}{% if remorqueur.tirant_eau %}, TE {{ remorqueur.tirant_eau }} m{% endif %}\n{% endfor %}\n{% endif %}\n{% if donnees_navires.remorqueurs.commentaire %}\nCommentaire utilisateur :\n{{ donnees_navires.remorqueurs.commentaire }}\n{% endif %}\n\nCONTENU À PRODUIRE:\n1. Présenter les types de remorqueurs utilisés pour l'étude\n2. Mentionner 2-3 caractéristiques clés (dimensions, tirant d'eau)\n3. Expliquer brièvement la logique de sélection (représentativité du trafic)\n4. Identifier le cas dimensionnant si pertinent\n\nRÈGLES STRICTES:\n- Mentionne en une phrase la répartition avant/arrière et l’adaptation selon le vent/courant.\n- Texte brut, AUCUN Markdown\n- Utiliser UNIQUEMENT les données fournies\n- Prose fluide, 5-10 phrases\n- Ne pas lister exhaustivement tous les remorqueurs (synthèse globale)\n{{ regles_formatage }}\n\nRédige maintenant la description des remorqueurs:",
+        "length": 1479,
+        "variables": [
+          "remorqueur",
+          "donnees_navires",
+          "regles_formatage"
+        ],
+        "has_conditions": true,
+        "has_loops": true,
+        "category": "navires"
+      },
+      "simulations": {
+        "file": "simulations.txt",
+        "path": "prompts/simulations.txt",
+        "content": "Tu es un ingénieur expert en manœuvrabilité portuaire et simulation maritime.\nRédige la section \"Simulations et essais\" présentant la méthodologie, les scénarios testés et les paramètres de simulation.\n\nMÉTHODOLOGIE DE SIMULATION:\n- Approche de modélisation numérique temps réel\n- Utilisation de simulateurs de navigation professionnels\n- Intégration des données bathymétriques et météo-océaniques\n- Validation par pilotes expérimentés en conditions représentatives\n\nPARAMÈTRES DE SIMULATION:\n{% if donnees_entree and donnees_entree.conditions_environnementales %}\nConditions environnementales testées:\n{% if donnees_entree.conditions_environnementales.vent %}\n- Vent: {{ donnees_entree.conditions_environnementales.vent.valeurs_retenues }}{% if donnees_entree.conditions_environnementales.vent.commentaire %} ({{ donnees_entree.conditions_environnementales.vent.commentaire }}){% endif %}\n{% endif %}\n{% if donnees_entree.conditions_environnementales.houle %}\n- Houle: {{ donnees_entree.conditions_environnementales.houle.valeurs_retenues }}{% if donnees_entree.conditions_environnementales.houle.commentaire %} ({{ donnees_entree.conditions_environnementales.houle.commentaire }}){% endif %}\n{% endif %}\n{% if donnees_entree.conditions_environnementales.courant %}\n- Courant: {{ donnees_entree.conditions_environnementales.courant.valeurs_retenues }}{% if donnees_entree.conditions_environnementales.courant.commentaire %} ({{ donnees_entree.conditions_environnementales.courant.commentaire }}){% endif %}\n{% endif %}\n{% if donnees_entree.conditions_environnementales.maree %}\n- Marée: {{ donnees_entree.conditions_environnementales.maree.valeurs_retenues }}{% if donnees_entree.conditions_environnementales.maree.commentaire %} ({{ donnees_entree.conditions_environnementales.maree.commentaire }}){% endif %}\n{% endif %}\n{% if donnees_entree.conditions_environnementales.agitation %}\n- Agitation: {{ donnees_entree.conditions_environnementales.agitation.valeurs_retenues }}{% if donnees_entree.conditions_environnementales.agitation.commentaire %} ({{ donnees_entree.conditions_environnementales.agitation.commentaire }}){% endif %}\n{% endif %}\n{% endif %}\n\nSCÉNARIOS TESTÉS:\n{% if simulations and simulations.simulations %}\n{% set scenarios = simulations.simulations|groupby('condition') %}\n{% for condition, sims in scenarios %}\nScénario \"{{condition}}\":\n{% for sim in sims[:3] %}\n- Simulation {{loop.index}}: {{sim.navire | default('Navire')}} - {{sim.manoeuvre | default('Manœuvre')}}\n{% if sim.conditions_env and sim.conditions_env.vent %}\n  Conditions: {{sim.conditions_env.vent}} / {{sim.conditions_env.houle | default('Houle')}}\n{% elif sim.condition %}\n  Conditions: {{sim.condition}}\n{% else %}\n  Conditions: Standard\n{% endif %}\n  Assistance: {{sim.remorqueurs | default('Remorqueurs')}}\n  Résultat: {{sim.resultat | default('N/A')}} - {{sim.commentaire_pilote | default('Aucun commentaire')}}\n{% endfor %}\n{% endfor %}\n\nSTATISTIQUES GLOBALES:\n- Total: {{simulations.simulations|length}} simulations réalisées\n- Réussites: {{(simulations.simulations|selectattr(\"resultat\", \"equalto\", \"Réussite\")|list)|length}} ({{((simulations.simulations|selectattr(\"resultat\", \"equalto\", \"Réussite\")|list)|length / (simulations.simulations|length) * 100)|round(1)}}%)\n- Échecs: {{(simulations.simulations|selectattr(\"resultat\", \"equalto\", \"Échec\")|list)|length}} ({{((simulations.simulations|selectattr(\"resultat\", \"equalto\", \"Échec\")|list)|length / (simulations.simulations|length) * 100)|round(1)}}%)\n{% else %}\nAUCUNE SIMULATION DISPONIBLE - Méthodologie théorique présentée\n{% endif %}\n\nTYPES DE MANŒUVRES SIMULÉES:\n- Accostage par conditions météorologiques variables\n- Appareillage en configurations d'assistance différentes\n- Manœuvres d'urgence et procédures exceptionnelles\n- Tests de robustesse en conditions limites\n\nVALIDATION ET CALIBRATION:\n- Comparaison avec données de manœuvres réelles\n- Validation par expertise pilote et retour d'expérience\n- Calibration des modèles hydrodynamiques\n- Analyse de sensibilité des paramètres critiques\n\nSTRUCTURE ATTENDUE:\n1. Présentation de la méthodologie de simulation employée\n2. Description détaillée des paramètres et configurations testées\n3. Catalogue des scénarios et conditions évaluées\n4. Analyse statistique globale des résultats par type de test\n5. Validation et limites de l'approche méthodologique\n\nRÈGLES DE RÉDACTION:\n{{ regles_formatage }}\n\nStyle: Méthodologique rigoureux, présentation systématique des approches et résultats.",
+        "length": 4495,
+        "variables": [
+          "donnees_entree",
+          "condition",
+          "loop",
+          "sim",
+          "simulations",
+          "(simulations",
+          "((simulations",
+          "regles_formatage"
+        ],
+        "has_conditions": true,
+        "has_loops": true,
+        "category": "simulations"
+      },
+      "scenarios_urgence": {
+        "file": "scenarios_urgence.txt",
+        "path": "prompts/scenarios_urgence.txt",
+        "content": "Tu es un expert en sécurité maritime. Décris les scénarios d'urgence et les procédures de sécurité.\n\nSituations d'urgence: Conditions météorologiques extrêmes et incidents techniques\n{% if donnees_entree and donnees_entree.conditions_environnementales %}\n{% if donnees_entree.conditions_environnementales.vent %}\nConditions critiques: {{ donnees_entree.conditions_environnementales.vent.valeurs_retenues }}\n{% endif %}\n{% if donnees_entree.conditions_environnementales.houle %}\nHoule limite: {{ donnees_entree.conditions_environnementales.houle.valeurs_retenues }}\n{% endif %}\n{% endif %}\n\nProcédures d'urgence:\n- Évacuation d'urgence des navires\n- Assistance renforcée par remorqueurs\n- Coordination avec les services de secours\n- Seuils de suspension des opérations\n\nSécurité: Mesures préventives et protocoles d'intervention d'urgence\n{% if nb_navires %}Application: Procédures adaptées aux {{ nb_navires }} types de navires{% endif %}\n\nRÈGLES DE RÉDACTION:\n{{ regles_formatage }}\n\nRédige les procédures d'urgence et les mesures de sécurité exceptionnelles.",
+        "length": 1060,
+        "variables": [
+          "donnees_entree",
+          "nb_navires",
+          "regles_formatage"
+        ],
+        "has_conditions": true,
+        "has_loops": false,
+        "category": "simulations"
+      }
+    },
+    "missing_prompts": [],
+    "total_prompts": 18,
+    "sections_covered": [
+      "introduction",
+      "analyse",
+      "conclusion"
+    ],
+    "granular_coverage": {
+      "donnees_entree": 11,
+      "navires": 2,
+      "simulations": 2,
+      "analyse": 1,
+      "general": 2
+    }
+  },
+  "sections": {
+    "introduction": {
+      "count": 2,
+      "category": "general",
+      "avg_quality": 0.6000000000000001,
+      "best_quality": 0.7000000000000001,
+      "avg_weight": 0.9,
+      "avg_words": 1177.0,
+      "custom_prompts": 2,
+      "prompt_coverage": 1.0,
+      "best_sources": [
+        "Final report- Maneuverability case study 'GNV SPLENDID' in the Port PPR.docx",
+        "Rapport de l'étude de manoeuvrabilité.docx"
+      ]
+    },
+    "analyse": {
+      "count": 1,
+      "category": "analyse",
+      "avg_quality": 0.5,
+      "best_quality": 0.5,
+      "avg_weight": 0.9019970044932601,
+      "avg_words": 2003.0,
+      "custom_prompts": 1,
+      "prompt_coverage": 1.0,
+      "best_sources": [
+        "Rapport de l'étude de manoeuvrabilité.docx"
+      ]
+    },
+    "conclusion": {
+      "count": 1,
+      "category": "general",
+      "avg_quality": 0.2,
+      "best_quality": 0.2,
+      "avg_weight": 0.39999999999999997,
+      "avg_words": 32.0,
+      "custom_prompts": 1,
+      "prompt_coverage": 1.0,
+      "best_sources": [
+        "Final report- Maneuverability case study 'GNV SPLENDID' in the Port PPR.docx"
+      ]
+    },
+    "donnees_entree_intro": {
+      "count": 0,
+      "category": "donnees_entree",
+      "avg_quality": 0,
+      "best_quality": 0,
+      "avg_weight": 0,
+      "avg_words": 0,
+      "custom_prompts": 0,
+      "prompt_coverage": 0,
+      "best_sources": []
+    },
+    "donnees_entree_plan_masse": {
+      "count": 0,
+      "category": "donnees_entree",
+      "avg_quality": 0,
+      "best_quality": 0,
+      "avg_weight": 0,
+      "avg_words": 0,
+      "custom_prompts": 0,
+      "prompt_coverage": 0,
+      "best_sources": []
+    },
+    "donnees_entree_bathymetrie": {
+      "count": 1,
+      "category": "donnees_entree",
+      "avg_quality": 0.5,
+      "best_quality": 0.5,
+      "avg_weight": 0.8651285930408472,
+      "avg_words": 1322.0,
+      "custom_prompts": 1,
+      "prompt_coverage": 1.0,
+      "best_sources": [
+        "Rapport de l'étude de manoeuvrabilité.docx"
+      ]
+    },
+    "donnees_entree_balisage": {
+      "count": 0,
+      "category": "donnees_entree",
+      "avg_quality": 0,
+      "best_quality": 0,
+      "avg_weight": 0,
+      "avg_words": 0,
+      "custom_prompts": 0,
+      "prompt_coverage": 0,
+      "best_sources": []
+    },
+    "donnees_entree_conditions_intro": {
+      "count": 0,
+      "category": "donnees_entree",
+      "avg_quality": 0,
+      "best_quality": 0,
+      "avg_weight": 0,
+      "avg_words": 0,
+      "custom_prompts": 0,
+      "prompt_coverage": 0,
+      "best_sources": []
+    },
+    "donnees_entree_houle": {
+      "count": 0,
+      "category": "donnees_entree",
+      "avg_quality": 0,
+      "best_quality": 0,
+      "avg_weight": 0,
+      "avg_words": 0,
+      "custom_prompts": 0,
+      "prompt_coverage": 0,
+      "best_sources": []
+    },
+    "donnees_entree_vent": {
+      "count": 1,
+      "category": "donnees_entree",
+      "avg_quality": 0.5,
+      "best_quality": 0.5,
+      "avg_weight": 0.8644927536231883,
+      "avg_words": 1104.0,
+      "custom_prompts": 1,
+      "prompt_coverage": 1.0,
+      "best_sources": [
+        "Rapport de l'étude de manoeuvrabilité.docx"
+      ]
+    },
+    "donnees_entree_courant": {
+      "count": 1,
+      "category": "donnees_entree",
+      "avg_quality": 0.6,
+      "best_quality": 0.6,
+      "avg_weight": 0.9836043360433604,
+      "avg_words": 1845.0,
+      "custom_prompts": 1,
+      "prompt_coverage": 1.0,
+      "best_sources": [
+        "Rapport de l'étude de manoeuvrabilité.docx"
+      ]
+    },
+    "donnees_entree_maree": {
+      "count": 1,
+      "category": "donnees_entree",
+      "avg_quality": 0.6,
+      "best_quality": 0.6,
+      "avg_weight": 0.9805882352941176,
+      "avg_words": 1700.0,
+      "custom_prompts": 1,
+      "prompt_coverage": 1.0,
+      "best_sources": [
+        "Rapport de l'étude de manoeuvrabilité.docx"
+      ]
+    },
+    "donnees_entree_agitation": {
+      "count": 1,
+      "category": "donnees_entree",
+      "avg_quality": 0.2,
+      "best_quality": 0.2,
+      "avg_weight": 0.44999999999999996,
+      "avg_words": 16.0,
+      "custom_prompts": 1,
+      "prompt_coverage": 1.0,
+      "best_sources": [
+        "Final report- Maneuverability case study 'GNV SPLENDID' in the Port PPR.docx"
+      ]
+    },
+    "donnees_entree_synthese": {
+      "count": 0,
+      "category": "donnees_entree",
+      "avg_quality": 0,
+      "best_quality": 0,
+      "avg_weight": 0,
+      "avg_words": 0,
+      "custom_prompts": 0,
+      "prompt_coverage": 0,
+      "best_sources": []
+    },
+    "navires": {
+      "count": 1,
+      "category": "navires",
+      "avg_quality": 0.6,
+      "best_quality": 0.6,
+      "avg_weight": 0.9808880308880309,
+      "avg_words": 2331.0,
+      "custom_prompts": 1,
+      "prompt_coverage": 1.0,
+      "best_sources": [
+        "Rapport de l'étude de manoeuvrabilité.docx"
+      ]
+    },
+    "remorqueurs": {
+      "count": 0,
+      "category": "navires",
+      "avg_quality": 0,
+      "best_quality": 0,
+      "avg_weight": 0,
+      "avg_words": 0,
+      "custom_prompts": 0,
+      "prompt_coverage": 0,
+      "best_sources": []
+    },
+    "simulations": {
+      "count": 1,
+      "category": "simulations",
+      "avg_quality": 0.9,
+      "best_quality": 0.9,
+      "avg_weight": 1.0,
+      "avg_words": 181.0,
+      "custom_prompts": 1,
+      "prompt_coverage": 1.0,
+      "best_sources": [
+        "Final report- Maneuverability case study 'GNV SPLENDID' in the Port PPR.docx"
+      ]
+    },
+    "scenarios_urgence": {
+      "count": 0,
+      "category": "simulations",
+      "avg_quality": 0,
+      "best_quality": 0,
+      "avg_weight": 0,
+      "avg_words": 0,
+      "custom_prompts": 0,
+      "prompt_coverage": 0,
+      "best_sources": []
+    }
+  },
+  "quality_stats": {
+    "overall_avg": 0.5272727272727273,
+    "overall_best": 0.9,
+    "sections_with_data": 10,
+    "sections_with_prompts": 10,
+    "granular_completeness": 0.5555555555555556
+  },
+  "granular_coverage": {
+    "donnees_entree": 5,
+    "navires": 1,
+    "simulations": 1,
+    "analyse": 1,
+    "general": 3
+  }
+}

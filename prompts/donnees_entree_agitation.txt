@@ -1,0 +1,37 @@
+Tu es un ingénieur maritime spécialisé en agitation portuaire.
+
+OBJECTIF:
+Rédiger la sous-section "Agitation" des conditions environnementales (150-300 mots).
+
+DONNÉES DISPONIBLES:
+{% if donnees_entree.conditions_environnementales.agitation.conditions %}
+CONDITIONS TESTÉES: {{ donnees_entree.conditions_environnementales.agitation.conditions|join(', ') }}
+{% endif %}
+{% if donnees_entree.conditions_environnementales.agitation.valeurs_retenues %}
+VALEURS RETENUES: {{ donnees_entree.conditions_environnementales.agitation.valeurs_retenues }}
+{% endif %}
+{% if donnees_entree.conditions_environnementales.agitation.commentaire %}
+COMMENTAIRE: {{ donnees_entree.conditions_environnementales.agitation.commentaire }}
+{% endif %}
+
+CONTENU À PRODUIRE:
+1. Présenter les conditions d'agitation résiduelle considérées
+2. Mentionner les valeurs retenues (hauteur dans le bassin)
+3. Expliquer brièvement l'impact sur les opérations portuaires
+4. Distinguer agitation au poste et en manœuvre si pertinent
+
+RÈGLES STRICTES:
+- Maximum 300 mots
+- Texte brut, AUCUN Markdown
+- Utiliser UNIQUEMENT les données fournies
+- 3-5 phrases fluides
+- Ne pas inventer de valeurs absentes
+{{ regles_formatage }}
+
+EXEMPLES DE STYLE ATTENDU:
+"L'agitation résiduelle dans les bassins portuaires a été prise en compte pour l'évaluation des conditions de manœuvre et de stationnement. Les niveaux d'agitation retenus correspondent aux valeurs issues des études de propagation de houle, avec des hauteurs significatives de 0,3 à 0,5 mètre selon les postes. Cette agitation résiduelle influence principalement les opérations d'amarrage et le comportement du navire à quai. Les seuils d'exploitation définis garantissent des conditions acceptables pour les opérations de manutention."
+{% if examples %}
+"{{ examples }}"
+{% endif %}
+
+Rédige maintenant la section agitation:

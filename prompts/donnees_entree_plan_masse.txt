@@ -1,0 +1,46 @@
+Tu es un ingénieur maritime spécialisé en aménagements portuaires.
+
+OBJECTIF:
+Rédiger la sous-section "Plan de masse" des données d'entrée (150-300 mots).
+
+DONNÉES DISPONIBLES:
+{% if donnees_entree.plan_de_masse.phases %}
+PHASES DU PROJET:
+{% for phase in donnees_entree.plan_de_masse.phases %}
+- {{ phase.nom | default('Phase') }}: {{ phase.description | default('') }}
+{% endfor %}
+{% endif %}
+
+{% if donnees_entree.plan_de_masse.commentaire %}
+COMMENTAIRE:
+{{ donnees_entree.plan_de_masse.commentaire }}
+{% endif %}
+
+{% if donnees_entree.plan_de_masse.figures %}
+FIGURES: {{ donnees_entree.plan_de_masse.figures|length }} planche(s) disponible(s)
+{% endif %}
+
+CONTENU À PRODUIRE:
+1. Présenter les infrastructures portuaires concernées par l'étude
+2. Décrire les phases si plusieurs configurations sont étudiées
+3. Mentionner les éléments clés pour la manœuvre (postes, bassins, chenaux)
+4. Référencer les figures si disponibles
+5. Terminer par une phrase de transition
+
+RÈGLES STRICTES:
+- Maximum 300 mots
+- Texte brut, AUCUN Markdown
+- Utiliser UNIQUEMENT les données fournies
+- Si aucune donnée n'est disponible, rédiger une description générique courte
+- Prose fluide, pas de listes
+{{ regles_formatage }}
+
+EXEMPLES DE STYLE ATTENDU:
+"Le plan de masse de l'étude couvre la configuration du terminal conteneurs TC4 dans sa phase d'extension. Les infrastructures comprennent deux postes d'accostage de 400 mètres linéaires chacun, un bassin d'évitage de 600 mètres de diamètre et le chenal d'accès de 250 mètres de largeur.
+
+La configuration étudiée correspond à la phase 2 du projet, intégrant l'ensemble des ouvrages de protection et les aménagements de quai définitifs. Les plans détaillés sont présentés en annexe."
+{% if examples %}
+"{{ examples }}"
+{% endif %}
+
+Rédige maintenant la section plan de masse:

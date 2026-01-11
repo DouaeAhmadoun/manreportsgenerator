@@ -1,0 +1,40 @@
+Tu es un ingénieur maritime spécialisé en marégraphie.
+
+OBJECTIF:
+Rédiger la sous-section "Marée" des conditions environnementales (150-300 mots).
+
+DONNÉES DISPONIBLES:
+{% if donnees_entree.conditions_environnementales.maree.conditions %}
+CONDITIONS TESTÉES: {{ donnees_entree.conditions_environnementales.maree.conditions|join(', ') }}
+{% endif %}
+{% if donnees_entree.conditions_environnementales.maree.valeurs_retenues %}
+VALEURS RETENUES: {{ donnees_entree.conditions_environnementales.maree.valeurs_retenues }}
+{% endif %}
+{% if donnees_entree.conditions_environnementales.maree.source %}
+SOURCE: {{ donnees_entree.conditions_environnementales.maree.source }}
+{% endif %}
+{% if donnees_entree.conditions_environnementales.maree.commentaire %}
+COMMENTAIRE: {{ donnees_entree.conditions_environnementales.maree.commentaire }}
+{% endif %}
+
+CONTENU À PRODUIRE:
+1. Présenter les conditions de marée considérées dans l'étude
+2. Mentionner les niveaux d'eau retenus (PM, BM, coefficients)
+3. Expliquer brièvement l'impact de la marée sur les manœuvres (tirant d'eau disponible)
+4. Distinguer vive-eau et morte-eau si pertinent
+
+RÈGLES STRICTES:
+- Maximum 300 mots
+- Texte brut, AUCUN Markdown
+- Utiliser UNIQUEMENT les données fournies
+- 3-5 phrases fluides
+- Ne pas inventer de valeurs absentes
+{{ regles_formatage }}
+
+EXEMPLES DE STYLE ATTENDU:
+"Les conditions de marée retenues pour les simulations couvrent les situations de vive-eau et de morte-eau représentatives du régime tidal du site. Les niveaux d'eau testés varient de la basse mer de vive-eau à la pleine mer, permettant d'évaluer l'influence du tirant d'eau disponible sur les manœuvres. Le marnage, atteignant 3,5 mètres en vive-eau, conditionne les créneaux d'accès pour les navires à fort tirant d'eau. Les simulations ont particulièrement ciblé les conditions de basse mer pour identifier les éventuelles restrictions opérationnelles."
+{% if examples %}
+"{{ examples }}"
+{% endif %}
+
+Rédige maintenant la section marée:

@@ -1,0 +1,12 @@
+{
+  "app_settings": {
+    "max_file_size_mb": 50,
+    "default_image_quality": 90,
+    "max_image_width": 1200,
+    "auto_compress_images": true,
+    "log_level": "INFO"
+  },
+  "api_config": {
+    "openrouter_api_key": "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"
+  }
+}

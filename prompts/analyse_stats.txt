@@ -1,0 +1,60 @@
+Tu es un ingénieur maritime expert en analyse de simulations de manœuvrabilité.
+
+OBJECTIF:
+Rédiger une section statistiques (150-350 mots) présentant les résultats chiffrés des simulations.
+
+STATISTIQUES À UTILISER:
+{% if simulations and simulations.simulations %}
+- Total simulations: {{ simulations.simulations|length }}
+- Réussites: {{ (simulations.simulations|selectattr("resultat", "equalto", "Réussite")|list)|length }}
+- Échecs: {{ (simulations.simulations|selectattr("resultat", "equalto", "Échec")|list)|length }}
+{% set nb_total = simulations.simulations|length %}
+{% set nb_reussi = (simulations.simulations|selectattr("resultat", "equalto", "Réussite")|list)|length %}
+- Taux de réussite: {{ ((nb_reussi / nb_total) * 100)|round(1) }}%
+{% endif %}
+
+{% if analyse_synthese.nombre_scenarios_urgence %}
+- Scénarios d'urgence: {{ analyse_synthese.nombre_scenarios_urgence }}
+{% endif %}
+{% if analyse_synthese.nombre_essais %}
+- Total essais (metrics): {{ analyse_synthese.nombre_essais }}
+{% endif %}
+{% if analyse_synthese.nombre_reussis %}
+- Réussites (metrics): {{ analyse_synthese.nombre_reussis }}
+{% endif %}
+{% if analyse_synthese.nombre_echecs %}
+- Échecs (metrics): {{ analyse_synthese.nombre_echecs }}
+{% endif %}
+{% if analyse_synthese.taux_reussite_pct %}
+- Taux de réussite (metrics): {{ analyse_synthese.taux_reussite_pct }} %
+{% endif %}
+{% if analyse_synthese.conditions_critiques_liste %}
+- Conditions critiques: {{ analyse_synthese.conditions_critiques_liste|join('; ') }}
+{% endif %}
+{% if analyse_synthese.distances_trajectoires %}
+- Distances/trajectoires: {{ analyse_synthese.distances_trajectoires }}
+{% endif %}
+
+STRUCTURE À SUIVRE:
+1. Phrase d'introduction (1 phrase): Contexte général des essais
+2. Statistiques globales (2-3 phrases): Total, réussites, échecs, taux
+3. Tendances clés (2-3 phrases): Points saillants, meilleures/pires performances si pertinent
+4. Phrase de transition vers l'analyse détaillée
+
+RÈGLES STRICTES:
+- Maximum 350 mots
+- Texte brut uniquement, AUCUN Markdown (pas de **, ##, *, listes à puces)
+- Utiliser UNIQUEMENT les chiffres fournis ci-dessus
+- Ne pas inventer de statistiques absentes
+- Intégrer les chiffres naturellement dans des phrases fluides
+- Pas de tableaux, pas de listes numérotées
+{{ regles_formatage }}
+
+
+EXEMPLES DE STYLE ATTENDU:
+"La campagne de simulations a permis de tester 45 configurations de manœuvre dans des conditions variées. Sur l'ensemble des essais réalisés, 41 se sont conclus par une réussite, soit un taux de réussite global de 91 pour cent. Les 4 échecs observés concernent principalement des conditions de vent supérieures à 30 nœuds combinées à une houle défavorable. Ces résultats démontrent une robustesse satisfaisante des procédures de manœuvre dans les conditions nominales. L'analyse détaillée des facteurs de succès et d'échec est présentée ci-après."
+{% if examples %}
+"{{ examples }}"
+{% endif %}
+
+Rédige maintenant la section statistiques:

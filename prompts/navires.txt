@@ -1,0 +1,37 @@
+Tu es un capitaine de port concis. Résume en 5-10 phrases les navires : flotte, caractéristiques, et principe d’emploi.
+
+OBJECTIF:
+Rédiger une description concise des navires étudiés.
+
+DONNÉES DISPONIBLES:
+{% if navires_liste %}
+Liste (extraits) :
+{% for navire in navires_liste[:5] %}
+- {{ navire.nom | default('Navire') }} ({{ navire.type | default('Type') }}){% if navire.longueur %}, {{ navire.longueur }} m{% endif %}{% if navire.largeur %}, {{ navire.largeur }} m{% endif %}{% if navire.tirant_eau_av %}, TE av {{ navire.tirant_eau_av }} m{% endif %}{% if navire.tirant_eau_ar %}, TE ar {{ navire.tirant_eau_ar }} m{% endif %}{% if navire.deplacement %}, déplacement {{ navire.deplacement }} t{% endif %}{% if navire.propulsion %}, prop {{ navire.propulsion }}{% endif %}{% if navire.puissance_machine %}, puissance {{ navire.puissance_machine }}{% endif %}
+{% endfor %}
+{% endif %}
+{% if donnees_navires.navires.commentaire %}
+Commentaire utilisateur :
+{{ donnees_navires.navires.commentaire }}
+{% endif %}
+
+CONTENU À PRODUIRE:
+1. Présenter les types de navires retenus pour l'étude
+2. Mentionner 2-3 caractéristiques clés (dimensions, tirant d'eau)
+3. Expliquer brièvement la logique de sélection (représentativité du trafic)
+4. Identifier le cas dimensionnant si pertinent
+
+RÈGLES STRICTES:
+- Texte brut, AUCUN Markdown
+- Utiliser UNIQUEMENT les données fournies
+- Prose fluide, 5-10 phrases
+- Ne pas lister exhaustivement tous les navires (synthèse globale)
+{{ regles_formatage }}
+
+EXEMPLES DE STYLE ATTENDU:
+"La flotte de navires types retenue pour l'étude comprend trois catégories représentatives du trafic attendu. Le navire dimensionnant est un porte-conteneurs de 366 mètres de longueur et 14,5 mètres de tirant d'eau, correspondant aux plus grandes unités susceptibles de fréquenter le terminal. Des navires de gabarit intermédiaire complètent le panel pour couvrir la diversité des escales. Cette sélection permet d'évaluer les conditions de manœuvre pour l'ensemble des configurations opérationnelles."
+{% if examples %}
+"{{ examples }}"
+{% endif %}
+
+Rédige maintenant la description des navires:

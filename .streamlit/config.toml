@@ -1,0 +1,19 @@
+[server]
+# Optimisations serveur
+runOnSave = true
+maxUploadSize = 200
+maxMessageSize = 200
+enableCORS = false
+enableXsrfProtection = false
+
+[browser]
+# Pas de collecte de stats au démarrage
+gatherUsageStats = false
+
+[theme]
+# Thème simple pour rendu plus rapide
+base = "light"
+
+[runner]
+magicEnabled = false
+installTracer = false

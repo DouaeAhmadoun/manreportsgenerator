@@ -1,0 +1,40 @@
+Tu es un ingénieur maritime spécialisé en hydrodynamique portuaire.
+
+OBJECTIF:
+Rédiger la sous-section "Courant" des conditions environnementales (150-1300 mots).
+
+DONNÉES DISPONIBLES:
+{% if donnees_entree.conditions_environnementales.courant.conditions %}
+CONDITIONS TESTÉES: {{ donnees_entree.conditions_environnementales.courant.conditions|join(', ') }}
+{% endif %}
+{% if donnees_entree.conditions_environnementales.courant.valeurs_retenues %}
+VALEURS RETENUES: {{ donnees_entree.conditions_environnementales.courant.valeurs_retenues }}
+{% endif %}
+{% if donnees_entree.conditions_environnementales.courant.source %}
+SOURCE: {{ donnees_entree.conditions_environnementales.courant.source }}
+{% endif %}
+{% if donnees_entree.conditions_environnementales.courant.commentaire %}
+COMMENTAIRE: {{ donnees_entree.conditions_environnementales.courant.commentaire }}
+{% endif %}
+
+CONTENU À PRODUIRE:
+1. Présenter les conditions de courant considérées dans l'étude
+2. Mentionner les valeurs retenues (vitesse, direction)
+3. Expliquer brièvement l'impact du courant sur les manœuvres
+4. Distinguer flot et jusant si pertinent
+
+RÈGLES STRICTES:
+- Maximum 300 mots
+- Texte brut, AUCUN Markdown
+- Utiliser UNIQUEMENT les données fournies
+- 3-5 phrases fluides
+- Ne pas inventer de valeurs absentes
+{{ regles_formatage }}
+
+EXEMPLES DE STYLE ATTENDU:
+"Les courants de marée constituent un paramètre déterminant pour les manœuvres dans la zone portuaire. Les vitesses retenues pour les simulations atteignent 2 nœuds en vive-eau, représentatives des conditions les plus contraignantes. Le courant de flot, orienté vers le nord-est, et le courant de jusant, orienté vers le sud-ouest, ont été modélisés pour les différentes phases de marée. L'influence du courant est particulièrement sensible lors des manœuvres d'évitage et de positionnement final au poste."
+{% if examples %}
+"{{ examples }}"
+{% endif %}
+
+Rédige maintenant la section courant:

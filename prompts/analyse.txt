@@ -1,0 +1,84 @@
+Tu es un ingénieur maritime expert en analyse de simulations de manœuvrabilité.
+
+OBJECTIF:
+Rédiger l'analyse principale des résultats (300-400 mots) couvrant performance, conditions critiques et facteurs de réussite/échec.
+
+DONNÉES DISPONIBLES:
+{% if simulations and simulations.simulations %}
+RÉSULTATS GLOBAUX:
+- Total: {{ simulations.simulations|length }} simulations
+- Réussites: {{ (simulations.simulations|selectattr("resultat", "equalto", "Réussite")|list)|length }}
+- Échecs: {{ (simulations.simulations|selectattr("resultat", "equalto", "Échec")|list)|length }}
+
+{% set echecs = simulations.simulations|selectattr("resultat", "equalto", "Échec")|list %}
+{% if echecs %}
+ÉCHECS IDENTIFIÉS:
+{% for echec in echecs[:5] %}
+- Essai {{ echec.numero_essai_original | default(loop.index) }}: {{ echec.condition | default('') }} - {{ echec.commentaire_pilote | default('Sans commentaire') }}
+{% endfor %}
+{% endif %}
+{% endif %}
+
+{% if analyse_synthese.conditions_critiques_liste %}
+CONDITIONS CRITIQUES RÉPERTORIÉES:
+{% for condition in analyse_synthese.conditions_critiques_liste %}
+- {{ condition }}
+{% endfor %}
+{% endif %}
+
+{% if analyse_synthese.recapitulatif_text %}
+ANALYSE EXISTANTE À INTÉGRER:
+{{ analyse_synthese.recapitulatif_text }}
+{% endif %}
+
+{% if analyse_synthese.nombre_essais %}
+MÉTRIQUES (formulaire analyse) :
+- Total essais: {{ analyse_synthese.nombre_essais }}
+- Réussites: {{ analyse_synthese.nombre_reussis | default('') }}
+- Échecs: {{ analyse_synthese.nombre_echecs | default('') }}
+- Taux de réussite: {{ analyse_synthese.taux_reussite_pct | default('') }} %
+{% endif %}
+{% if analyse_synthese.nombre_scenarios_urgence %}
+- Scénarios d'urgence: {{ analyse_synthese.nombre_scenarios_urgence }}
+{% endif %}
+{% if analyse_synthese.distances_trajectoires %}
+- Distances/trajectoires: {{ analyse_synthese.distances_trajectoires }}
+{% endif %}
+{% if analyse_synthese.objectifs_evaluations %}
+ÉVALUATION DES OBJECTIFS (extraits) :
+{% set objectifs = analyse_synthese.objectifs_evaluations.values()|list|sort(attribute='ordre') %}
+{% for obj in objectifs[:3] %}
+- {{ obj.objectif_texte | default('Objectif') }} : {{ obj.degre_realisation | default('Non évalué') }}{% if obj.metriques %} ({{ obj.metriques }}){% endif %}
+{% endfor %}
+{% endif %}
+
+STRUCTURE À SUIVRE:
+1. Paragraphe 1 - Synthèse des résultats (4-5 phrases): Rappel des chiffres clés, taux de réussite, interprétation globale
+2. Paragraphe 2 - Analyse des réussites (3-4 phrases): Facteurs favorables, configurations performantes
+3. Paragraphe 3 - Analyse des échecs (3-4 phrases): Conditions critiques, causes identifiées, seuils limites
+4. Paragraphe 4 - Conclusions opérationnelles (2-3 phrases): Enseignements, recommandations implicites
+5. Phrase de transition vers les recommandations
+
+RÈGLES STRICTES:
+- Maximum 400 mots
+- Texte brut uniquement, AUCUN Markdown (pas de **, ##, *, listes)
+- Utiliser UNIQUEMENT les données fournies ci-dessus
+- Ne pas inventer de statistiques ou conditions absentes
+- Si l'analyse existante est fournie, l'enrichir sans la répéter mot pour mot
+- Prose fluide, paragraphes distincts
+- Ton analytique et factuel
+{{ regles_formatage }}
+
+EXEMPLES DE STYLE ATTENDU:
+"L'analyse des 45 simulations révèle un taux de réussite global de 91 pour cent, traduisant une bonne maîtrise des manœuvres dans les conditions testées. La majorité des essais réussis correspondent à des conditions environnementales modérées avec un vent inférieur à 25 nœuds et une assistance de deux remorqueurs.
+
+Les configurations les plus performantes associent une approche par le sud-ouest avec un courant de flot favorable. Dans ces conditions, les temps de manœuvre restent conformes aux standards opérationnels et les marges de sécurité sont respectées.
+
+Les quatre échecs observés présentent un dénominateur commun : la combinaison d'un vent de secteur nord supérieur à 30 nœuds avec une houle croisée. Ces conditions génèrent des efforts latéraux dépassant la capacité de compensation des remorqueurs, rendant le contrôle du navire insuffisant à l'approche du poste.
+
+Ces résultats confirment la faisabilité des manœuvres dans l'enveloppe opérationnelle nominale tout en identifiant des seuils critiques à respecter. Les recommandations détaillées sont présentées dans la section suivante."
+{% if examples %}
+"{{ examples }}"
+{% endif %}
+
+Rédige maintenant l'analyse:

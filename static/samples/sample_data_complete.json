@@ -1,0 +1,40 @@
+{
+  "metadonnees": {
+    "titre": "Étude de manœuvrabilité - Port de Tanger",
+    "code_projet": "TMD-2024-001",
+    "client": "Agence Nationale des Ports",
+    "type": "Rapport de manœuvrabilité",
+    "numero": "RM-001",
+    "annee": "2024"
+  },
+  "introduction": {
+    "guidelines": "Cette étude vise à évaluer la faisabilité des manœuvres portuaires dans le port de Tanger Med.",
+    "objectifs": "Déterminer les conditions limites d'exploitation et identifier les mesures d'optimisation."
+  },
+  "donnees_navires": {
+    "navires": {
+      "navires": [],
+      "description": "",
+      "commentaire": ""
+    },
+    "remorqueurs": {
+      "remorqueurs": [
+        {
+          "nom": "Remorqueur 1",
+          "type": "ASD",
+          "traction": 60,
+          "figure": "uploads/remorqueur1.png",
+          "remarques": "Profil exemple - traction 60T"
+        },
+        {
+          "nom": "Remorqueur 2",
+          "type": "Tracteur",
+          "traction": 70,
+          "figure": "uploads/remorqueur2.png",
+          "remarques": "Profil exemple - traction 70T"
+        }
+      ],
+      "commentaire": "Exemple de flotte de remorqueurs avec figures"
+    }
+  }
+}

@@ -1,0 +1,41 @@
+Tu es un ingénieur maritime expert en manœuvrabilité portuaire.
+
+OBJECTIF:
+Rédiger une synthèse des données d'entrée (150-300 mots maximum) qui regroupe et met en cohérence toutes les informations collectées.
+
+DONNÉES DISPONIBLES:
+Données structurées :
+Plan de masse : {{ donnees_entree.plan_de_masse | default('') }}
+Balisage : {{ donnees_entree.balisage | default('') }}
+Bathymétrie : {{ donnees_entree.bathymetrie | default('') }}
+Houle : {{ donnees_entree.conditions_environnementales.houle | default('') }}
+Vent : {{ donnees_entree.conditions_environnementales.vent | default('') }}
+Courant : {{ donnees_entree.conditions_environnementales.courant | default('') }}
+Marée : {{ donnees_entree.conditions_environnementales.maree | default('') }}
+Agitation : {{ donnees_entree.conditions_environnementales.agitation | default('') }}
+
+STRUCTURE À SUIVRE:
+1. Paragraphe 1 (3-4 phrases): Résumer les données d'infrastructure (plan de masse, balisage, bathymétrie)
+2. Paragraphe 2 (3-4 phrases): Résumer les conditions environnementales avec les valeurs clés
+3. Paragraphe 3 (2-3 phrases): Conclure sur la cohérence d'ensemble et les interactions importantes
+4. Phrase finale: Transition vers les navires
+
+RÈGLES STRICTES:
+- Maximum 300 mots
+- Texte brut uniquement, AUCUN Markdown (pas de **, ##, *, listes)
+- Utiliser UNIQUEMENT les données listées ci-dessus
+- Ne pas inventer de valeurs absentes
+- Ne pas répéter deux fois la même information
+- Prose fluide, style rapport technique
+- Chaque valeur mentionnée une seule fois
+{{ regles_formatage }}
+
+EXEMPLES DE STYLE ATTENDU:
+"Les données d'infrastructure comprennent un plan de masse détaillant les postes d'accostage et les zones de manœuvre, complété par un système de balisage conforme aux normes AISM. La bathymétrie, issue de relevés récents, garantit des profondeurs compatibles avec les tirants d'eau des navires étudiés.
+Les conditions environnementales retenues couvrent des vents de secteur Nord-Ouest jusqu'à 25 nœuds, une houle de 1,5 mètre et des courants de marée atteignant 2 nœuds en vive-eau.
+L'ensemble de ces données présente une cohérence satisfaisante pour l'évaluation des manœuvres. Les sections suivantes détaillent les simulations réalisées."
+{% if examples %}
+"{{ examples }}"
+{% endif %}
+
+Rédige maintenant la synthèse:

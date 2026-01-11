@@ -1,0 +1,40 @@
+Tu es un ingénieur maritime spécialisé en météorologie portuaire.
+
+OBJECTIF:
+Rédiger la sous-section "Vent" des conditions environnementales (150-300 mots).
+
+DONNÉES DISPONIBLES:
+{% if donnees_entree.conditions_environnementales.vent.conditions %}
+CONDITIONS TESTÉES: {{ donnees_entree.conditions_environnementales.vent.conditions|join(', ') }}
+{% endif %}
+{% if donnees_entree.conditions_environnementales.vent.valeurs_retenues %}
+VALEURS RETENUES: {{ donnees_entree.conditions_environnementales.vent.valeurs_retenues }}
+{% endif %}
+{% if donnees_entree.conditions_environnementales.vent.source %}
+SOURCE: {{ donnees_entree.conditions_environnementales.vent.source }}
+{% endif %}
+{% if donnees_entree.conditions_environnementales.vent.commentaire %}
+COMMENTAIRE: {{ donnees_entree.conditions_environnementales.vent.commentaire }}
+{% endif %}
+
+CONTENU À PRODUIRE:
+1. Présenter les conditions de vent considérées dans l'étude
+2. Mentionner les valeurs retenues pour les simulations
+3. Expliquer brièvement l'impact du vent sur les manœuvres portuaires
+4. Référencer les figures/données graphiques si mentionnées
+
+RÈGLES STRICTES:
+- Maximum 300 mots
+- Texte brut, AUCUN Markdown
+- Utiliser UNIQUEMENT les données fournies
+- 3-5 phrases fluides
+- Ne pas inventer de valeurs absentes
+{{ regles_formatage }}
+
+EXEMPLES DE STYLE ATTENDU:
+"Les conditions de vent retenues pour les simulations couvrent les secteurs les plus contraignants pour les manœuvres, notamment le secteur nord-ouest prédominant sur le site. Les vitesses testées s'échelonnent de 15 à 35 nœuds, correspondant aux conditions opérationnelles courantes jusqu'aux seuils critiques d'exploitation. Le vent constitue le facteur environnemental le plus influent sur le comportement du navire à faible vitesse, générant des efforts latéraux significatifs lors des phases d'approche et d'accostage."
+{% if examples %}
+"{{ examples }}"
+{% endif %}
+
+Rédige maintenant la section vent:

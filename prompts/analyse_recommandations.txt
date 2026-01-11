@@ -1,0 +1,79 @@
+Tu es un ingénieur maritime expert en manœuvrabilité portuaire.
+
+OBJECTIF:
+Rédiger des recommandations opérationnelles (250-500 mots) basées sur l'analyse des simulations.
+
+DONNÉES DISPONIBLES:
+{% if simulations and simulations.simulations %}
+- Total simulations: {{ simulations.simulations|length }}
+- Taux de réussite: {{ ((simulations.simulations|selectattr("resultat", "equalto", "Réussite")|list)|length / simulations.simulations|length * 100)|round(1) }}%
+
+{% set echecs = simulations.simulations|selectattr("resultat", "equalto", "Échec")|list %}
+{% if echecs %}
+CAUSES D'ÉCHEC IDENTIFIÉES:
+{% for echec in echecs[:3] %}
+- {{ echec.condition | default('Condition non précisée') }}: {{ echec.commentaire_pilote | default('') }}
+{% endfor %}
+{% endif %}
+{% endif %}
+
+{% if analyse_synthese.conditions_critiques_liste %}
+CONDITIONS CRITIQUES:
+{% for condition in analyse_synthese.conditions_critiques_liste[:5] %}
+- {{ condition }}
+{% endfor %}
+{% endif %}
+{% if analyse_synthese.nombre_essais %}
+- Total essais (metrics): {{ analyse_synthese.nombre_essais }}
+{% endif %}
+{% if analyse_synthese.taux_reussite_pct %}
+- Taux de réussite (metrics): {{ analyse_synthese.taux_reussite_pct }} %
+{% endif %}
+{% if analyse_synthese.nombre_scenarios_urgence %}
+- Scénarios d'urgence: {{ analyse_synthese.nombre_scenarios_urgence }}
+{% endif %}
+{% if analyse_synthese.distances_trajectoires %}
+- Distances/trajectoires: {{ analyse_synthese.distances_trajectoires }}
+{% endif %}
+{% if analyse_synthese.objectifs_evaluations %}
+{% set objectifs = analyse_synthese.objectifs_evaluations.values()|list|sort(attribute='ordre') %}
+ÉVALUATION DES OBJECTIFS (extraits) :
+{% for obj in objectifs[:3] %}
+- {{ obj.objectif_texte | default('Objectif') }} : {{ obj.degre_realisation | default('Non évalué') }}{% if obj.metriques %} ({{ obj.metriques }}){% endif %}
+{% endfor %}
+{% endif %}
+
+STRUCTURE À SUIVRE:
+1. Phrase d'introduction (1 phrase): "Sur la base de l'analyse des simulations, les recommandations suivantes sont formulées..."
+2. Recommandations (5-10 items): Chaque recommandation commence par un tiret simple "-"
+3. Phrase de conclusion (1 phrase): Synthèse ou transition
+
+FORMAT DES RECOMMANDATIONS:
+- Chaque recommandation sur une ligne
+- Commencer par un verbe d'action (Limiter, Prévoir, Renforcer, Adapter...)
+- Être spécifique et actionnable
+- Se baser uniquement sur les données fournies
+
+RÈGLES STRICTES:
+- Maximum 500 mots
+- Texte brut uniquement, AUCUN Markdown (pas de **, ##, numérotation 1. 2. 3.)
+- Format liste avec tirets simples "-" uniquement
+- Ne pas inventer de recommandations sans lien avec les données
+- Ton professionnel et prescriptif
+{{ regles_formatage }}
+
+EXEMPLES DE RÉSULTAT ATTENDU:
+"Sur la base de l'analyse des simulations, les recommandations suivantes sont formulées pour optimiser la sécurité et l'efficacité des manœuvres.
+
+- Limiter les opérations d'accostage lorsque le vent de secteur nord dépasse 30 nœuds
+- Prévoir systématiquement deux remorqueurs pour les navires de plus de 300 mètres
+- Privilégier les créneaux de marée haute pour les manœuvres des plus grands gabarits
+- Renforcer la coordination VHF entre pilote et remorqueurs en conditions dégradées
+- Adapter la vitesse d'approche en fonction de l'état de la houle
+
+Ces recommandations permettent de définir une enveloppe opérationnelle sécurisée tout en maintenant une exploitation efficiente du terminal."
+{% if examples %}
+"{{ examples }}"
+{% endif %}
+
+Rédige maintenant les recommandations:

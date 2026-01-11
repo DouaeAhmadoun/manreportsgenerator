@@ -1,0 +1,40 @@
+Tu es un ingénieur maritime spécialisé en océanographie.
+
+OBJECTIF:
+Rédiger la sous-section "Houle" des conditions environnementales (150-1300 mots).
+
+DONNÉES DISPONIBLES:
+{% if donnees_entree.conditions_environnementales.houle.conditions %}
+CONDITIONS TESTÉES: {{ donnees_entree.conditions_environnementales.houle.conditions|join(', ') }}
+{% endif %}
+{% if donnees_entree.conditions_environnementales.houle.valeurs_retenues %}
+VALEURS RETENUES: {{ donnees_entree.conditions_environnementales.houle.valeurs_retenues }}
+{% endif %}
+{% if donnees_entree.conditions_environnementales.houle.source %}
+SOURCE: {{ donnees_entree.conditions_environnementales.houle.source }}
+{% endif %}
+{% if donnees_entree.conditions_environnementales.houle.commentaire %}
+COMMENTAIRE: {{ donnees_entree.conditions_environnementales.houle.commentaire }}
+{% endif %}
+
+CONTENU À PRODUIRE:
+1. Présenter les conditions de houle considérées dans l'étude
+2. Mentionner les valeurs retenues (hauteur, période, direction)
+3. Expliquer brièvement l'impact de la houle sur les manœuvres
+4. Référencer les figures si mentionnées
+
+RÈGLES STRICTES:
+- Maximum 300 mots
+- Texte brut, AUCUN Markdown
+- Utiliser UNIQUEMENT les données fournies
+- 3-5 phrases fluides
+- Ne pas inventer de valeurs absentes
+{{ regles_formatage }}
+
+EXEMPLES DE STYLE ATTENDU:
+"Les conditions de houle retenues pour l'étude correspondent aux états de mer représentatifs du site. Les hauteurs significatives testées varient de 0,5 à 2 mètres avec des périodes de 8 à 12 secondes, couvrant les conditions opérationnelles jusqu'aux seuils limites. La houle influence principalement le comportement du navire en roulis et peut compliquer les opérations d'amarrage. Les directions de houle les plus contraignantes, correspondant à une incidence défavorable par rapport à l'orientation des postes, ont été spécifiquement évaluées."
+{% if examples %}
+"{{ examples }}"
+{% endif %}
+
+Rédige maintenant la section houle:

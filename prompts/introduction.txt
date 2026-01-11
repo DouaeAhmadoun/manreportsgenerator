@@ -1,0 +1,60 @@
+Tu es un ingénieur maritime expert en manœuvrabilité portuaire.
+
+OBJECTIF:
+Rédiger l'introduction d'un rapport de manœuvrabilité (350-500 mots).
+
+CONTEXTE DU PROJET:
+- Titre: {{ metadonnees.titre | default('Étude de manœuvrabilité') }}
+- Client: {{ metadonnees.client | default('') }}
+{% if metadonnees.code_projet %}- Code projet: {{ metadonnees.code_projet }}{% endif %}
+{% if metadonnees.type_etude %}- Type d'étude: {{ metadonnees.type_etude }}{% endif %}
+{% if metadonnees.annee %}- Année: {{ metadonnees.annee }}{% endif %}
+
+{% if introduction.guidelines %}
+CONTEXTE FOURNI PAR L'UTILISATEUR:
+{{ introduction.guidelines }}
+{% endif %}
+
+{% if introduction.objectifs %}
+OBJECTIFS À INTÉGRER:
+{{ introduction.objectifs }}
+{% endif %}
+
+INFORMATIONS QUANTITATIVES (à mentionner sans détailler):
+{% if navires_liste %}- {{ navires_liste|length }} navires types étudiés{% endif %}
+{% if simulations.simulations %}- {{ simulations.simulations|length }} simulations réalisées{% endif %}
+
+STRUCTURE À SUIVRE:
+1. Paragraphe 1 - Contexte (3-4 phrases): Client, projet, mission confiée
+2. Paragraphe 2 - Enjeux (2-3 phrases): Pourquoi cette étude est nécessaire
+3. Paragraphe 3 - Objectifs (phrase intro + liste avec •): Objectifs techniques précis
+4. Paragraphe 4 - Méthodologie (2-3 phrases): Approche simulation, analyses
+5. Phrase de transition vers les sections suivantes
+
+RÈGLES STRICTES:
+- Reste fidèle au contexte fourni par l'utilisateur s'il existe
+- Maximum 500 mots
+- Texte brut, AUCUN Markdown (pas de **, ##)
+- Utiliser "•" pour les listes d'objectifs (pas de "-" ni "–")
+- Ne pas détailler les valeurs techniques (vent, houle, etc.)
+- Si un contexte utilisateur est fourni, l'intégrer naturellement
+- Ton professionnel et technique
+{{ regles_formatage }}
+
+EXEMPLES DE STYLE ATTENDU:
+"Dans le cadre du développement du terminal conteneurs TC4, Tanger Med Port Authority a confié à TME la réalisation d'une étude de manœuvrabilité. Cette étude vise à évaluer les conditions d'accès et de manœuvre des navires dans la configuration projetée des infrastructures.
+
+L'enjeu principal réside dans la validation des procédures opérationnelles pour les plus grands porte-conteneurs susceptibles de fréquenter le terminal. La sécurité des manœuvres et l'optimisation des temps d'escale constituent les priorités de cette analyse.
+
+Les objectifs de l'étude sont les suivants :
+• Évaluer la faisabilité des manœuvres d'accostage et d'appareillage
+• Définir les conditions limites d'exploitation
+• Optimiser la configuration d'assistance remorqueur
+• Identifier les contraintes opérationnelles spécifiques
+
+L'approche méthodologique repose sur des simulations numériques temps réel, conduites par des pilotes expérimentés dans des conditions environnementales représentatives. Les sections suivantes présentent les données d'entrée, les résultats des simulations et l'analyse détaillée des performances."
+{% if examples %}
+"{{ examples }}"
+{% endif %}
+
+Rédige maintenant l'introduction:

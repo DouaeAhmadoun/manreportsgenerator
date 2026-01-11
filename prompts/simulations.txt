@@ -1,0 +1,84 @@
+Tu es un ingénieur expert en manœuvrabilité portuaire et simulation maritime.
+Rédige la section "Simulations et essais" présentant la méthodologie, les scénarios testés et les paramètres de simulation.
+
+MÉTHODOLOGIE DE SIMULATION:
+- Approche de modélisation numérique temps réel
+- Utilisation de simulateurs de navigation professionnels
+- Intégration des données bathymétriques et météo-océaniques
+- Validation par pilotes expérimentés en conditions représentatives
+
+PARAMÈTRES DE SIMULATION:
+{% if donnees_entree and donnees_entree.conditions_environnementales %}
+Conditions environnementales testées:
+{% if donnees_entree.conditions_environnementales.vent %}
+- Vent: {{ donnees_entree.conditions_environnementales.vent.valeurs_retenues }}{% if donnees_entree.conditions_environnementales.vent.commentaire %} ({{ donnees_entree.conditions_environnementales.vent.commentaire }}){% endif %}
+{% endif %}
+{% if donnees_entree.conditions_environnementales.houle %}
+- Houle: {{ donnees_entree.conditions_environnementales.houle.valeurs_retenues }}{% if donnees_entree.conditions_environnementales.houle.commentaire %} ({{ donnees_entree.conditions_environnementales.houle.commentaire }}){% endif %}
+{% endif %}
+{% if donnees_entree.conditions_environnementales.courant %}
+- Courant: {{ donnees_entree.conditions_environnementales.courant.valeurs_retenues }}{% if donnees_entree.conditions_environnementales.courant.commentaire %} ({{ donnees_entree.conditions_environnementales.courant.commentaire }}){% endif %}
+{% endif %}
+{% if donnees_entree.conditions_environnementales.maree %}
+- Marée: {{ donnees_entree.conditions_environnementales.maree.valeurs_retenues }}{% if donnees_entree.conditions_environnementales.maree.commentaire %} ({{ donnees_entree.conditions_environnementales.maree.commentaire }}){% endif %}
+{% endif %}
+{% if donnees_entree.conditions_environnementales.agitation %}
+- Agitation: {{ donnees_entree.conditions_environnementales.agitation.valeurs_retenues }}{% if donnees_entree.conditions_environnementales.agitation.commentaire %} ({{ donnees_entree.conditions_environnementales.agitation.commentaire }}){% endif %}
+{% endif %}
+{% endif %}
+
+SCÉNARIOS TESTÉS:
+{% if simulations and simulations.simulations %}
+{% set scenarios = simulations.simulations|groupby('condition') %}
+{% for condition, sims in scenarios %}
+Scénario "{{condition}}":
+{% for sim in sims[:3] %}
+- Simulation {{loop.index}}: {{sim.navire | default('Navire')}} - {{sim.manoeuvre | default('Manœuvre')}}
+{% if sim.conditions_env and sim.conditions_env.vent %}
+  Conditions: {{sim.conditions_env.vent}} / {{sim.conditions_env.houle | default('Houle')}}
+{% elif sim.condition %}
+  Conditions: {{sim.condition}}
+{% else %}
+  Conditions: Standard
+{% endif %}
+  Assistance: {{sim.remorqueurs | default('Remorqueurs')}}
+  Résultat: {{sim.resultat | default('N/A')}} - {{sim.commentaire_pilote | default('Aucun commentaire')}}
+{% endfor %}
+{% endfor %}
+
+STATISTIQUES GLOBALES:
+- Total: {{simulations.simulations|length}} simulations réalisées
+- Réussites: {{(simulations.simulations|selectattr("resultat", "equalto", "Réussite")|list)|length}} ({{((simulations.simulations|selectattr("resultat", "equalto", "Réussite")|list)|length / (simulations.simulations|length) * 100)|round(1)}}%)
+- Échecs: {{(simulations.simulations|selectattr("resultat", "equalto", "Échec")|list)|length}} ({{((simulations.simulations|selectattr("resultat", "equalto", "Échec")|list)|length / (simulations.simulations|length) * 100)|round(1)}}%)
+{% else %}
+AUCUNE SIMULATION DISPONIBLE - Méthodologie théorique présentée
+{% endif %}
+
+TYPES DE MANŒUVRES SIMULÉES:
+- Accostage par conditions météorologiques variables
+- Appareillage en configurations d'assistance différentes
+- Manœuvres d'urgence et procédures exceptionnelles
+- Tests de robustesse en conditions limites
+
+VALIDATION ET CALIBRATION:
+- Comparaison avec données de manœuvres réelles
+- Validation par expertise pilote et retour d'expérience
+- Calibration des modèles hydrodynamiques
+- Analyse de sensibilité des paramètres critiques
+
+STRUCTURE ATTENDUE:
+1. Présentation de la méthodologie de simulation employée
+2. Description détaillée des paramètres et configurations testées
+3. Catalogue des scénarios et conditions évaluées
+4. Analyse statistique globale des résultats par type de test
+5. Validation et limites de l'approche méthodologique
+
+RÈGLES DE RÉDACTION:
+{{ regles_formatage }}
+
+{% if examples %}
+EXEMPLES DE STYLE ATTENDU:
+"{{ examples }}"
+{% endif %}
+
+Style: Méthodologique rigoureux, présentation systématique des approches et résultats.

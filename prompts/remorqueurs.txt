@@ -1,0 +1,37 @@
+Tu es un capitaine de port concis. Résume en 5-10 phrases les moyens d’assistance : flotte, traction indicative, et principe d’emploi.
+
+OBJECTIF:
+Rédiger une description concise de la flotte utilisée.
+
+DONNÉES DISPONIBLES:
+{% if remorqueurs_liste %}
+Flotte (extraits) :
+{% for remorqueur in remorqueurs_liste[:4] %}
+- {{ remorqueur.nom | default('Remorqueur') }} ({{ remorqueur.type | default('Type') }}){% if remorqueur.traction %}, traction {{ remorqueur.traction }} t{% endif %}{% if remorqueur.longueur %}, {{ remorqueur.longueur }} m{% endif %}{% if remorqueur.largeur %}, {{ remorqueur.largeur }} m{% endif %}{% if remorqueur.tirant_eau %}, TE {{ remorqueur.tirant_eau }} m{% endif %}
+{% endfor %}
+{% endif %}
+{% if donnees_navires.remorqueurs.commentaire %}
+Commentaire utilisateur :
+{{ donnees_navires.remorqueurs.commentaire }}
+{% endif %}
+
+CONTENU À PRODUIRE:
+1. Présenter les types de remorqueurs utilisés pour l'étude
+2. Mentionner 2-3 caractéristiques clés (dimensions, tirant d'eau)
+3. Expliquer brièvement la logique de sélection (représentativité du trafic)
+4. Identifier le cas dimensionnant si pertinent
+
+RÈGLES STRICTES:
+- Mentionne en une phrase la répartition avant/arrière et l’adaptation selon le vent/courant.
+- Texte brut, AUCUN Markdown
+- Utiliser UNIQUEMENT les données fournies
+- Prose fluide, 5-10 phrases
+- Ne pas lister exhaustivement tous les remorqueurs (synthèse globale)
+{{ regles_formatage }}
+
+{% if examples %}
+EXEMPLES DE STYLE ATTENDU:
+"{{ examples }}"
+{% endif %}
+
+Rédige maintenant la description des remorqueurs:

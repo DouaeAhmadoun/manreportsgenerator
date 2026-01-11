@@ -1,0 +1,30 @@
+Tu es un expert en sécurité maritime. Décris les scénarios d'urgence et les procédures de sécurité.
+
+Situations d'urgence: Conditions météorologiques extrêmes et incidents techniques
+{% if donnees_entree and donnees_entree.conditions_environnementales %}
+{% if donnees_entree.conditions_environnementales.vent %}
+Conditions critiques: {{ donnees_entree.conditions_environnementales.vent.valeurs_retenues }}
+{% endif %}
+{% if donnees_entree.conditions_environnementales.houle %}
+Houle limite: {{ donnees_entree.conditions_environnementales.houle.valeurs_retenues }}
+{% endif %}
+{% endif %}
+
+Procédures d'urgence:
+- Évacuation d'urgence des navires
+- Assistance renforcée par remorqueurs
+- Coordination avec les services de secours
+- Seuils de suspension des opérations
+
+Sécurité: Mesures préventives et protocoles d'intervention d'urgence
+{% if nb_navires %}Application: Procédures adaptées aux {{ nb_navires }} types de navires{% endif %}
+
+RÈGLES DE RÉDACTION:
+{{ regles_formatage }}
+
+{% if examples %}
+EXEMPLES DE STYLE ATTENDU:
+"{{ examples }}"
+{% endif %}
+
+Rédige les procédures d'urgence et les mesures de sécurité exceptionnelles.
