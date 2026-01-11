@@ -10,14 +10,6 @@ from config import Config, STREAMLIT_CONFIG
 
 st.set_page_config(**STREAMLIT_CONFIG)
 
-import os
-
-k_or_env = os.getenv("OPENROUTER_API_KEY", "")
-k_or_sec = st.secrets.get("OPENROUTER_API_KEY", "")
-
-st.write("OPENROUTER env:", bool(k_or_env), "len:", len(k_or_env))
-st.write("OPENROUTER secrets:", bool(k_or_sec), "len:", len(k_or_sec))
-
 # =============================================================================
 # CONFIGURATION DES ONGLETS
 # =============================================================================
