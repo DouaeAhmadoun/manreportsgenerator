@@ -447,8 +447,10 @@ FIN DES EXEMPLES - Maintenant rédige en utilisant les données ci-dessus."""
             return None
         
         try:
+            IS_STREAMLIT = bool(os.getenv("STREAMLIT_SERVER_RUN_ON_SAVE"))
+
             key = self._get_api_key()
-            if os.getenv("STREAMLIT_SERVER_RUN_ON_SAVE"):
+            if IS_STREAMLIT:
                 key = st.secrets["OPENROUTER_API_KEY"].strip()
             response = requests.post(
                 "https://openrouter.ai/api/v1/chat/completions",
