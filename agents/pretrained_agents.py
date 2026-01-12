@@ -473,6 +473,7 @@ FIN DES EXEMPLES - Maintenant rédige en utilisant les données ci-dessus."""
                 },
                 timeout=self.timeout
             )
+
             
             if response.status_code == 200:
                 result = response.json()
@@ -484,6 +485,11 @@ FIN DES EXEMPLES - Maintenant rédige en utilisant les données ci-dessus."""
                 time.sleep(2)
             else:
                 print(f"    ⚠️ API Error {response.status_code}")
+
+        if response.status_code != 200:
+            st.error(f"OpenRouter status: {response.status_code}")
+            st.code(response.text[:2000])
+            st.stop()
                 
         except Exception as e:
             print(f"    ⚠️ Erreur API: {e}")
