@@ -454,6 +454,7 @@ FIN DES EXEMPLES - Maintenant rédige en utilisant les données ci-dessus."""
                 "https://openrouter.ai/api/v1/chat/completions",
                 headers={
                     "Authorization": f"Bearer {key}",
+                    "HTTP-Referer": "https://manreportsgenerator.streamlit.app" if IS_STREAMLIT else "http://localhost",
                     "Content-Type": "application/json"
                 },
                 json={
